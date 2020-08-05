@@ -1,14 +1,15 @@
-import basic
+from basic import run
+from functions import startupProcess 
 
-runShell = True
+startupProcess()
 
-while runShell:
+while True:
 	text = input('KaasScript > ')
-	result, error = basic.run('<pl>', text)
 
-	if text == 'exit': 
-		runShell = False
+	if text == 'exit':
 		break
+
+	result, error = run('<pl>', text)
 
 	if error: print(error)
 	else: print(result)

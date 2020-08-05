@@ -1,5 +1,15 @@
 from json import load
-from colors import reset, fg_red
+from colors import reset, fg_yellow, fg_red
+
+def startupProcess():
+	print(fg_yellow, '''
+	 _  __                   ____               _         _
+	| |/ / __ _   __ _  ___ / ___|   ___  _ __ (_) _ __  | |_
+	| ' / / _` | / _` |/ __|\\___ \\  / __|| '__|| || '_ \\ | __|
+	| . \\| (_| || (_| |\\__ \\ ___) || (__ | |   | || |_) || |_
+	|_|\\_\\\\__,_| \\__,_||___/|____/  \\___||_|   |_|| .__/  \\__|
+	                                              |_|
+	''', reset)
 
 def getLangSettings():
 	settings = open('settings.json')
