@@ -121,7 +121,6 @@ TT_EQ = 'EQ'
 TT_ROOT = 'ROOT'
 TT_LPAREN = 'LPAREN'
 TT_RPAREN = 'RPAREN'
-TT_ABS = 'ABS'
 TT_EE = 'EE'
 TT_NE = 'NE'
 TT_LT = 'LT'
@@ -223,9 +222,6 @@ class Lexer:
 				self.advance()
 			elif self.current_char == ')':
 				tokens.append(Token(TT_RPAREN, pos_start=self.pos))
-				self.advance()
-			elif self.current_char == '|':
-				tokens.append(Token(TT_ABS, pos_start=self.pos))
 				self.advance()
 			elif self.current_char == '!':
 				token, error = self.make_not_equals()
@@ -682,21 +678,6 @@ class Parser:
 				return res.failure(InvalidSyntaxError(
 					self.current_tok.pos_start, self.current_tok.pos_end,
 					ExpectedRightParanMessage[CURRENT_LANG]
-				))
-
-		elif tok.type == TT_ABS:
-			res.register_advancement()
-			self.advance()
-			expr = res.register(self.expr())
-			if res.error: return res
-			if self.current_tok.type == TT_ABS:
-				res.register_advancement()
-				self.advance()
-				return res.success(expr)
-			else:
-				return res.failure(InvalidSyntaxError(
-					self.current_tok.pos_start, self.current_tok.pos_end,
-					ExpectedSecondAbs[CURRENT_LANG]
 				))
 
 		elif tok.matches(TT_KEYWORD, 'if'):
