@@ -1,31 +1,51 @@
-IllegalCharErrorMessage = {}
-InvalidSyntaxErrorMessage = {}
-RTErrorMessage = {}
-ExpectedOperatorMessage = {}
-ExpectedRightParanMessage = {}
-ExpectedNumberMessage = {}
-DivisionByZeroMessage = {}
+from errormessages import IllegalCharErrorMessage, InvalidSyntaxErrorMessage, RTErrorMessage
+from functions import errorString
+from constants import CURRENT_LANG
 
-IllegalCharErrorMessage["en"] = 'Illegal Character'
-InvalidSyntaxErrorMessage["en"] = 'Invalid Syntax'
-RTErrorMessage["en"] = 'Runtime Error'
-ExpectedOperatorMessage["en"] = "Expected '+', '-', '*', '/' or '%'"
-ExpectedRightParanMessage["en"] = "Expected ')'"
-ExpectedNumberMessage["en"] = "Expected integer, float, identifier, '+', '-' or '(', 'if', 'for', 'while', 'function'"
-DivisionByZeroMessage["en"] = 'Division by zero'
+class Error:
+	def __init__(self, pos_start, pos_end, error_name, details):
+		self.pos_start = pos_start
+		self.pos_end = pos_end
+		self.error_name = error_name
+		self.details = details
 
-IllegalCharErrorMessage["nl"] = 'Ongeoorloofd karakter'
-InvalidSyntaxErrorMessage["nl"] = 'Ongeldige samenstelling'
-RTErrorMessage["nl"] = 'Runtime Fout'
-ExpectedOperatorMessage["nl"] = "Verwachtte '+', '-', '*', '/' of '%'"
-ExpectedRightParanMessage["nl"] = "Verwachtte ')'"
-ExpectedNumberMessage["nl"] = "Verwachtte geheel getal, decimaal, '+', '-' of '('"
-DivisionByZeroMessage["nl"] = 'Delen door nul'
+	def __str__(self):
+		result = f'{self.error_name}: {self.details}\n'
+		result += f'File {self.pos_start.fn}, line {self.pos_start.ln + 1}'
+		result += '\n\n' + errorString(self.pos_start.ftxt, self.pos_start, self.pos_end)
+		return result
 
-IllegalCharErrorMessage["de"] = 'Ungültiger Charakter'
-InvalidSyntaxErrorMessage["de"] = 'Ungültige Syntax'
-RTErrorMessage["de"] = 'Runtime Fehler'
-ExpectedOperatorMessage["de"] = "Erwartet '+', '-', '*', '/' oder '%'"
-ExpectedRightParanMessage["de"] = "Erwartet ')'"
-ExpectedNumberMessage["de"] = "Erwartet Ganze Zahl, Dezimal, '+', '-' oder '('"
-DivisionByZeroMessage["de"] = 'Teilung durch Null'
+class IllegalCharError(Error):
+	def __init__(self, pos_start, pos_end, details):
+		super().__init__(pos_start, pos_end, IllegalCharErrorMessage[CURRENT_LANG], details)
+
+class ExpectedCharError(Error):
+	def __init__(self, pos_start, pos_end, details):
+		super().__init__(pos_start, pos_end, 'Expected Character', details)
+
+class InvalidSyntaxError(Error):
+	def __init__(self, pos_start, pos_end, details=''):
+		super().__init__(pos_start, pos_end, InvalidSyntaxErrorMessage[CURRENT_LANG], details)
+
+class RTError(Error):
+	def __init__(self, pos_start, pos_end, details, context):
+		super().__init__(pos_start, pos_end, RTErrorMessage[CURRENT_LANG], details)
+		self.context = context
+	
+	def as_string(self):
+		result = self.generate_traceback()
+		result += f'{self.error_name}: {self.details}'
+		result += '\n\n' + errorString(self.pos_start.ftxt, self.pos_start, self.pos_end)
+		return result
+	
+	def generate_traceback(self):
+		result = ''
+		pos = self.pos_start
+		ctx = self.context
+
+		while ctx:
+			result = f'  File {pos.fn}, line {str(pos.ln + 1)}, in {ctx.display_name}\n' + result
+			pos = ctx.parent_entry_pos
+			ctx = ctx.parent
+		
+		return 'Traceback (most recent call last):\n' + result
