@@ -12,4 +12,4 @@ while True:
 	result, error = run('<pl>', text)
 
 	if error: print(error)
-	else: print(result)
+	elif result: print(result)
