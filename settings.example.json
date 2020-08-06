@@ -1,3 +1,4 @@
 {
-	"language": "en"
+	"language": "en",
+	"whileLoopLimit": 1000000
 }

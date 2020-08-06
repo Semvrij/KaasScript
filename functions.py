@@ -11,18 +11,35 @@ def startupProcess():
 	                                              |_|
 	''', reset)
 
-def getLangSettings():
+def printWarning(message):
+	print(fg_red,message,reset)
+
+def getJsonSettings():
 	settings = open('settings.json')
 	data = load(settings)
 	settings.close()
+
+	return data
+
+def getLangSettings():
+	data = getJsonSettings()
 	lang = data["language"]
 	langList = ['en', 'nl', 'de']
 
 	if lang not in langList: 
-		print(fg_red, f"Warning: The specified language ('{lang}') is not supported. Right now, we only support {listToString(langList)}. The default language is English.", reset)
+		printWarning(f"Warning: The specified language ('{lang}') is not supported. Right now, we only support {listToString(langList)}. The default language is English.")
 		lang = 'en'
 
 	return lang
+
+def getWhileLoopLimit():
+	data = getJsonSettings()
+	limit = data["whileLoopLimit"]
+
+	if isinstance(limit, int):
+		return limit
+	
+	printWarning("The value of whileLoopLimit must be a integer.")
 
 def listToString(li):
 	newList = ', '.join(li[:-1])

@@ -9,7 +9,7 @@
 # IMPORTS
 ###############
 
-from functions import getLangSettings, errorString
+from functions import getLangSettings, getWhileLoopLimit, errorString
 from errors import *
 
 ###############
@@ -23,7 +23,7 @@ LETTERS = ASCII_LOWERCASE + ASCII_UPPERCASE
 LETTERS_DIGITS = LETTERS + DIGITS
 PUNCTUATION = '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'
 CURRENT_LANG = getLangSettings()
-WHILELOOPLIMIT = 1000000
+WHILELOOPLIMIT = getWhileLoopLimit()
 
 ###############
 # ERRORS
