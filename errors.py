@@ -13,7 +13,7 @@ RTErrorMessage["en"] = 'Runtime Error'
 ExpectedOperatorMessage["en"] = "Expected '+', '-', '*', '/' or '%'"
 ExpectedRightParanMessage["en"] = "Expected ')'"
 ExpectedSecondAbs["en"] = "Expected '|'"
-ExpectedNumberMessage["en"] = "Expected integer, float, identifier, '+', '-' or '('"
+ExpectedNumberMessage["en"] = "Expected integer, float, identifier, '+', '-' or '(', 'if', 'for', 'while', 'function'"
 DivisionByZeroMessage["en"] = 'Division by zero'
 
 IllegalCharErrorMessage["nl"] = 'Ongeoorloofd karakter'
