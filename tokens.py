@@ -13,6 +13,8 @@ TT_ROOT = 'ROOT'
 TT_EQ = 'EQ'
 TT_LPAREN = 'LPAREN'
 TT_RPAREN = 'RPAREN'
+TT_LSQUARE = 'LSQUARE'
+TT_RSQUARE = 'RSQUARE'
 TT_EE = 'EE'
 TT_NE = 'NE'
 TT_LT = 'LT'
@@ -51,7 +53,7 @@ class Token:
 		
 		if pos_end:
 			self.pos_end = pos_end.copy()
-	
+
 	def matches(self, type_, value):
 		return self.type == type_ and self.value == value
 

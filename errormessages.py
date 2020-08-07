@@ -11,7 +11,7 @@ InvalidSyntaxErrorMessage["en"] = 'Invalid Syntax'
 RTErrorMessage["en"] = 'Runtime Error'
 ExpectedOperatorMessage["en"] = "Expected '+', '-', '*', '/' or '%'"
 ExpectedRightParanMessage["en"] = "Expected ')'"
-ExpectedNumberMessage["en"] = "Expected integer, float, identifier, '+', '-' or '(', 'if', 'for', 'while', 'function'"
+ExpectedNumberMessage["en"] = "Expected integer, float, identifier, '+', '-', '(', '[', 'if', 'for', 'while' or 'function'"
 DivisionByZeroMessage["en"] = 'Division by zero'
 
 IllegalCharErrorMessage["nl"] = 'Ongeoorloofd karakter'
