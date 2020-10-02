@@ -1,7 +1,7 @@
 from constants import CURRENT_LANG, WHILELOOPLIMIT
 from errormessages import DivisionByZeroMessage
 from errors import RTError
-from tokens import TT_KEYWORD, TT_PLUS, TT_MINUS, TT_MUL, TT_DIV, TT_MODUL, TT_POW, TT_ROOT, TT_EE, TT_NE, TT_LT, TT_GT, TT_LTE, TT_GTE
+from tokens import TT_KEYWORD, TT_PLUS, TT_MINUS, TT_MUL, TT_DIV, TT_MODUL, TT_POW, TT_ROOT, TT_EE, TT_EEE, TT_NE, TT_LT, TT_GT, TT_LTE, TT_GTE
 from lexer import Lexer
 from _parser import Parser
 
@@ -58,6 +58,9 @@ class Value:
 		return None, self.illegal_operation(other)
 
 	def get_comparison_eq(self, other):
+		return None, self.illegal_operation(other)
+	
+	def get_comparison_eee(self, other):
 		return None, self.illegal_operation(other)
 
 	def get_comparison_ne(self, other):
@@ -156,7 +159,17 @@ class Number(Value):
 			return None, Value.illegal_operation(self, other)
 
 	def get_comparison_eq(self, other):
+		if isinstance(other, String):
+			return Number(int(str(self.value) == other.value)).set_context(self.context), None
 		if isinstance(other, Number):
+			return Number(int(self.value == other.value)).set_context(self.context), None
+		else:
+			return None, Value.illegal_operation(self, other)
+
+	def get_comparison_eee(self, other):
+		if isinstance(other, String):
+			return Number(0).set_context(self.context), None
+		elif isinstance(other, Number):
 			return Number(int(self.value == other.value)).set_context(self.context), None
 		else:
 			return None, Value.illegal_operation(self, other)
@@ -232,6 +245,28 @@ class String(Value):
 	def multed_by(self, other):
 		if isinstance(other, Number):
 			return String(self.value * other.value).set_context(self.context), None
+		else:
+			return None, Value.illegal_operation(self, other)
+
+	def get_comparison_eq(self, other):
+		if isinstance(other, Number):
+			return Number(int(self.value == str(other.value))).set_context(self.context), None
+		if isinstance(other, String):
+			return Number(int(self.value == other.value)).set_context(self.context), None
+		else:
+			return None, Value.illegal_operation(self, other)
+	
+	def get_comparison_eee(self, other):
+		if isinstance(other, Number):
+			return Number(0).set_context(self.context), None
+		elif isinstance(other, String):
+			return Number(int(self.value == other.value)).set_context(self.context), None
+		else:
+			return None, Value.illegal_operation(self, other)
+
+	def get_comparison_ne(self, other):
+		if isinstance(other, String):
+			return Number(int(self.value != other.value)).set_context(self.context), None
 		else:
 			return None, Value.illegal_operation(self, other)
 
@@ -451,6 +486,8 @@ class Interpreter:
 			result, error = left.root_of(right)
 		elif node.op_tok.type == TT_EE:
 			result, error = left.get_comparison_eq(right)
+		elif node.op_tok.type == TT_EEE:
+			result, error = left.get_comparison_eee(right)
 		elif node.op_tok.type == TT_NE:
 			result, error = left.get_comparison_ne(right)
 		elif node.op_tok.type == TT_LT:

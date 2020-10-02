@@ -188,7 +188,10 @@ class Lexer:
 
 		if self.current_char == '=':
 			self.advance()
-			tok_type = TT_EE
+			if self.current_char == '=':
+				self.advance()
+				tok_type = TT_EEE
+			else: tok_type = TT_EE
 
 		return Token(tok_type, pos_start=pos_start, pos_end=self.pos)
 
