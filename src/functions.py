@@ -1,5 +1,5 @@
 from json import load
-from colors import reset, fg_yellow, fg_red
+from src.colors import reset, fg_yellow, fg_red
 
 def startupProcess():
 	print(fg_yellow, '''

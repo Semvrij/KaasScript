@@ -1,8 +1,8 @@
-from functions import startupProcess
+from src.functions import startupProcess
 
 startupProcess()
 
-from interperter import run
+from src.interperter import run
 
 while True:
 	text = input('KaasScript > ')

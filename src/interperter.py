@@ -1,9 +1,9 @@
-from constants import CURRENT_LANG, WHILELOOPLIMIT
-from errormessages import DivisionByZeroMessage
-from errors import RTError
-from tokentypes import TT_KEYWORD, TT_PLUS, TT_MINUS, TT_MUL, TT_DIV, TT_MODUL, TT_POW, TT_ROOT, TT_EE, TT_EEE, TT_NE, TT_LT, TT_GT, TT_LTE, TT_GTE
-from lexer import Lexer
-from _parser import Parser
+from src.constants import CURRENT_LANG, WHILELOOPLIMIT
+from src.errormessages import DivisionByZeroMessage
+from src.errors import RTError
+from src.tokentypes import TT_KEYWORD, TT_PLUS, TT_MINUS, TT_MUL, TT_DIV, TT_MODUL, TT_POW, TT_ROOT, TT_EE, TT_EEE, TT_NE, TT_LT, TT_GT, TT_LTE, TT_GTE
+from src.lexer import Lexer
+from src._parser import Parser
 
 class RTResult:
 	def __init__(self):

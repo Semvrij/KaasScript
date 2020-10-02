@@ -1,4 +1,4 @@
-from functions import getLangSettings, getWhileLoopLimit
+from src.functions import getLangSettings, getWhileLoopLimit
 
 DIGITS = '0123456789'
 ASCII_LOWERCASE = 'abcdefghijklmnopqrstuvwxyz'

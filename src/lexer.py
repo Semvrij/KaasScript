@@ -1,7 +1,7 @@
-from tokens import *
-from tokentypes import *
-from constants import DIGITS, LETTERS, LETTERS_DIGITS
-from errors import IllegalCharError, ExpectedCharError
+from src.tokens import *
+from src.tokentypes import *
+from src.constants import DIGITS, LETTERS, LETTERS_DIGITS
+from src.errors import IllegalCharError, ExpectedCharError
 
 class Position:
 	def __init__(self, idx, ln, col, fn, ftxt):
