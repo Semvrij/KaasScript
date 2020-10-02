@@ -36,9 +36,8 @@ def getWhileLoopLimit():
 	data = getJsonSettings()
 	limit = data["whileLoopLimit"]
 
-	if isinstance(limit, int):
-		return limit
-	
+	if isinstance(limit, int): return limit
+
 	printWarning("The value of whileLoopLimit must be a integer.")
 
 def listToString(li):
