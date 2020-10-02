@@ -6,12 +6,14 @@ comp-expr	: NOT comp-expr
 
 arith-expr	: term ((PLUS|MINUS) term)*
 
-term		: factor ((MUL|DIV|MODUL|ROOT) factor)*
+term		: factor ((MUL|DIV|MODUL) factor)*
 
 factor		: (PLUS|MINUS) factor
 			: power
 
-power		: call (POW factor)*
+power		: root (POW factor)*
+
+root		: call (ROOT) call
 
 call		: atom (LPAREN (expr (COMMA expr)*)? RPAREN)?
 

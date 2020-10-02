@@ -113,8 +113,8 @@ class Parser:
 		return self.bin_op(self.term, (TT_PLUS, TT_MINUS))
 
 	def term(self):
-		return self.bin_op(self.factor, (TT_MUL, TT_DIV, TT_MODUL, TT_ROOT))
-
+		return self.bin_op(self.factor, (TT_MUL, TT_DIV, TT_MODUL))
+	
 	def factor(self):
 		res = ParseResult()
 		tok = self.current_tok
@@ -129,7 +129,10 @@ class Parser:
 		return self.power()
 
 	def power(self):
-		return self.bin_op(self.call, (TT_POW, ), self.factor)
+		return self.bin_op(self.root, (TT_POW, ), self.factor)
+
+	def root(self):
+		return self.bin_op(self.call, (TT_ROOT, ), self.factor)
 	
 	def call(self):
 		res = ParseResult()
