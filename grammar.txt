@@ -1,23 +1,23 @@
-expr		: KEYWORD:VAR IDENTIFIER EQ expr
+expr        : KEYWORD:VAR IDENTIFIER EQ expr
             : comp-expr ((KEYWORD:AND|KEYWORD:OR) comp-expr)*
 
-comp-expr	: NOT comp-expr
+comp-expr   : NOT comp-expr
             : arith-expr ((EE|LT|GT|LTE|GTE) arith-expr)*
 
-arith-expr	: term ((PLUS|MINUS) term)*
+arith-expr  : term ((PLUS|MINUS) term)*
 
-term		: factor ((MUL|DIV|MODUL) factor)*
+term        : factor ((MUL|DIV|MODUL) factor)*
 
-factor		: (PLUS|MINUS) factor
+factor      : (PLUS|MINUS) factor
             : power
 
-power		: root (POW factor)*
+power       : root (POW factor)*
 
-root		: call (ROOT) call
+root        : call (ROOT) call
 
-call		: atom (LPAREN (expr (COMMA expr)*)? RPAREN)?
+call        : atom (LPAREN (expr (COMMA expr)*)? RPAREN)?
 
-atom 		: INT|FLOAT|STRING|IDENTIFIER
+atom        : INT|FLOAT|STRING|IDENTIFIER
             : LPAREN expr RPAREN
             : list-expr
             : if-expr
@@ -25,17 +25,17 @@ atom 		: INT|FLOAT|STRING|IDENTIFIER
             : while-expr
             : func-def
 
-list-expr	: LSQUARE (expr (COMMA expr)*)? RSQUARE
+list-expr   : LSQUARE (expr (COMMA expr)*)? RSQUARE
 
-if-expr		: KEYWORD:IF expr KEYWORD:THEN expr
+if-expr     : KEYWORD:IF expr KEYWORD:THEN expr
               (KEYWORD:ELIF expr KEYWORD:THEN expr)*
               (KEYWORD:ELSE expr)?
 
-for-expr	: KEYWORD:FOR IDENTIFIER EQ expr KEYWORD:TO expr 
+for-expr    : KEYWORD:FOR IDENTIFIER EQ expr KEYWORD:TO expr 
               (KEYWORD:STEP expr)? KEYWORD:THEN expr
 
-while-expr	: KEYWORD:WHILE expr KEYWORD:THEN expr
+while-expr  : KEYWORD:WHILE expr KEYWORD:THEN expr
 
-func-def	: KEYWORD:FUNCTION IDENTIFIER?
+func-def    : KEYWORD:FUNCTION IDENTIFIER?
               LPAREN (IDENTIFIER (COMMA IDENTIFIER)*)? RPAREN
               ARROW expr
