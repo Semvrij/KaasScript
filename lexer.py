@@ -1,4 +1,5 @@
 from tokens import *
+from tokentypes import *
 from constants import DIGITS, LETTERS, LETTERS_DIGITS
 from errors import IllegalCharError, ExpectedCharError
 
