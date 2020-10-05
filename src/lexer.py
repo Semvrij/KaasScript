@@ -1,6 +1,7 @@
 from src.tokens import *
-from src.tokentypes import *
-from src.constants import DIGITS, LETTERS, LETTERS_DIGITS
+from src.constants.tokentypes import *
+from src.constants.keywords import *
+from src.constants.constants import DIGITS, LETTERS, LETTERS_DIGITS
 from src.errors import IllegalCharError, ExpectedCharError
 
 class Position:

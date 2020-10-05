@@ -25,19 +25,3 @@ TT_GTE = 'GTE'
 TT_COMMA = 'COMMA'
 TT_ARROW = 'ARROW'
 TT_EOF = 'EOF'
-
-KEYWORDS = [
-	'var',
-	'and',
-	'or',
-	'not',
-	'if',
-	'else',
-	'elif',
-	'then',
-	'for',
-	'to',
-	'step',
-	'while',
-	'function'
-]

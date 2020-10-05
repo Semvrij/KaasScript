@@ -1,6 +1,6 @@
-from src.tokentypes import TT_INT, TT_STRING, TT_FLOAT, TT_IDENTIFIER, TT_KEYWORD, TT_PLUS, TT_MINUS, TT_MUL, TT_DIV, TT_MODUL, TT_POW, TT_ROOT, TT_EQ, TT_LPAREN, TT_RPAREN, TT_LSQUARE, TT_RSQUARE, TT_EE, TT_EEE, TT_NE, TT_LT, TT_GT, TT_LTE, TT_GTE, TT_COMMA, TT_ARROW, TT_EOF
+from src.constants.tokentypes import *
 from src.errors import InvalidSyntaxError
-from src.constants import CURRENT_LANG
+from src.constants.constants import CURRENT_LANG
 from src.errormessages import IllegalCharErrorMessage, InvalidSyntaxErrorMessage, RTErrorMessage, ExpectedOperatorMessage, ExpectedRightParanMessage, ExpectedNumberMessage
 from src.nodes import *
 
