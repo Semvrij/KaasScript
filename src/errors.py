@@ -1,6 +1,6 @@
-from src.errormessages import IllegalCharErrorMessage, InvalidSyntaxErrorMessage, RTErrorMessage
+from src.constants.errormessages import IllegalCharErrorMessage, InvalidSyntaxErrorMessage, RTErrorMessage
 from src.functions import errorString
-from src.constants import CURRENT_LANG
+from src.constants.constants import CURRENT_LANG
 
 class Error:
 	def __init__(self, pos_start, pos_end, error_name, details):

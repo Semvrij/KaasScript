@@ -1,7 +1,7 @@
 from src.constants.tokentypes import *
 from src.errors import InvalidSyntaxError
 from src.constants.constants import CURRENT_LANG
-from src.errormessages import IllegalCharErrorMessage, InvalidSyntaxErrorMessage, RTErrorMessage, ExpectedOperatorMessage, ExpectedRightParanMessage, ExpectedNumberMessage
+from src.constants.errormessages import IllegalCharErrorMessage, InvalidSyntaxErrorMessage, RTErrorMessage, ExpectedOperatorMessage, ExpectedRightParanMessage, ExpectedNumberMessage
 from src.nodes import *
 
 class ParseResult:
