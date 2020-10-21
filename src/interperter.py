@@ -494,6 +494,36 @@ class BuiltInFunction(BaseFunction):
 		return RTResult().success(String(text))
 	execute_input.arg_names = []
 
+	def execute_run(self, exec_ctx):
+		fn = exec_ctx.symbol_table.get("fn")
+
+		if not isinstance(fn, String):
+			return RTResult().failure(RTError(
+				self.pos_start, self.pos_end,
+				"Second argument must be string",
+				exec_ctx
+			))
+
+		fn = fn.value
+
+		try:
+			with open(fn, "r") as f:
+				script = f.read()
+		except Exception as e:
+			return RTResult().failure(RTError(
+				self.pos_start, self.pos_end,
+				f"Failed to load script \"{fn}\"\n" + str(e),
+				exec_ctx
+			))
+
+		_, error = run(fn, script)
+		
+		if error:
+			return RTResult().failure(error)
+
+		return RTResult().success(Number.null)
+	execute_run.arg_names = ["fn"]
+
 class Context:
 	def __init__(self, display_name, parent=None, parent_entry_pos=None):
 		self.display_name = display_name
@@ -780,6 +810,7 @@ global_symbol_table.set("false", Number.false)
 global_symbol_table.set("true", Number.true)
 global_symbol_table.set("print", BuiltInFunction("print"))
 global_symbol_table.set("input", BuiltInFunction("input"))
+global_symbol_table.set("run", BuiltInFunction("run"))
 
 def run(fn, text):
 	# Generate tokens
