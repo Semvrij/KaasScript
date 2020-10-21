@@ -1,12 +1,12 @@
 statements  : NEWLINE* expr (NEWLINE+ statement)* NEWLINE
 
-statement		: KEYWORD:RETURN expr?
+statement   : KEYWORD:RETURN expr?
             : KEYWORD:CONTINUE
             : KEYWORD:BREAK
             : expr
 
 expr        : KEYWORD:VAR IDENTIFIER EQ expr
-            : comp-expr ((KEYWORD:AND|KEYWORD:OR) comp-expr)*
+            : comp-expr ((AND|OR) comp-expr)*
 
 comp-expr   : NOT comp-expr
             : arith-expr ((EE|LT|GT|LTE|GTE) arith-expr)*
@@ -34,28 +34,28 @@ atom        : INT|FLOAT|STRING|IDENTIFIER
 
 list-expr   : LSQUARE (expr (COMMA expr)*)? RSQUARE
 
-if-expr     : KEYWORD:IF expr KEYWORD:THEN
+if-expr     : KEYWORD:IF expr LCURLY
               (statement if-expr-b|if-expr-c?)
-            | (NEWLINE statements KEYWORD:END|if-expr-b|if-expr-c)
+            | (NEWLINE statements RCURLY|if-expr-b|if-expr-c)
 
-if-expr-b   : KEYWORD:ELIF expr KEYWORD:THEN
+if-expr-b   : KEYWORD:ELIF expr LCURLY
               (statement if-expr-b|if-expr-c?)
-            | (NEWLINE statements KEYWORD:END|if-expr-b|if-expr-c)
+            | (NEWLINE statements RCURLY|if-expr-b|if-expr-c)
 
 if-expr-c   : KEYWORD:ELSE
               statement
-            | (NEWLINE statements KEYWORD:END)
+            | (NEWLINE statements RCURLY)
 
 for-expr    : KEYWORD:FOR IDENTIFIER EQ expr KEYWORD:TO expr 
-              (KEYWORD:STEP expr)? KEYWORD:THEN
+              (KEYWORD:STEP expr)? LCURLY
               expr
-            | (NEWLINE statements KEYWORD:END)
+            | (NEWLINE statements RCURLY)
 
-while-expr  : KEYWORD:WHILE expr KEYWORD:THEN
+while-expr  : KEYWORD:WHILE expr LCURLY
               expr
-            | (NEWLINE statements KEYWORD:END)
+            | (NEWLINE statements RCURLY)
 
 func-def    : KEYWORD:FUN IDENTIFIER?
               LPAREN (IDENTIFIER (COMMA IDENTIFIER)*)? RPAREN
               (ARROW expr)
-            | (NEWLINE statements KEYWORD:END)
+            | (NEWLINE statements RCURLY)
