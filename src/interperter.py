@@ -1,7 +1,7 @@
 from src.constants.constants import CURRENT_LANG, WHILELOOPLIMIT
 from src.constants.errormessages import DivisionByZeroMessage
 from src.errors import RTError
-from src.constants.tokentypes import TT_KEYWORD, TT_PLUS, TT_MINUS, TT_MUL, TT_DIV, TT_MODUL, TT_POW, TT_ROOT, TT_EE, TT_EEE, TT_NE, TT_LT, TT_GT, TT_LTE, TT_GTE
+from src.constants.tokentypes import TT_KEYWORD, TT_PLUS, TT_MINUS, TT_MUL, TT_DIV, TT_MODUL, TT_POW, TT_ROOT, TT_EE, TT_EEE, TT_NE, TT_LT, TT_GT, TT_LTE, TT_GTE, TT_AND, TT_OR, TT_NOT
 from src.lexer import Lexer
 from src._parser import Parser
 
@@ -713,9 +713,9 @@ class Interpreter:
 			result, error = left.get_comparison_lte(right)
 		elif node.op_tok.type == TT_GTE:
 			result, error = left.get_comparison_gte(right)
-		elif node.op_tok.matches(TT_KEYWORD, 'and'):
+		elif node.op_tok.type == TT_AND:
 			result, error = left.anded_by(right)
-		elif node.op_tok.matches(TT_KEYWORD, 'or'):
+		elif node.op_tok.type == TT_OR:
 			result, error = left.ored_by(right)
 		
 		if error:
@@ -732,7 +732,7 @@ class Interpreter:
 
 		if node.op_tok.type == TT_MINUS:
 			number, error = number.multed_by(Number(-1))
-		elif node.op_tok.matches(TT_KEYWORD, 'not'):
+		elif node.op_tok.type == TT_NOT:
 			number, error = number.notted()
 		
 		if error:

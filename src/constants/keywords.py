@@ -1,8 +1,5 @@
 KEYWORDS = [
 	'var',
-	'and',
-	'or',
-	'not',
 	'if',
 	'else',
 	'elif',
