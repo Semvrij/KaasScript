@@ -506,6 +506,9 @@ class BuiltInFunction(BaseFunction):
 
 		fn = fn.value
 
+		if '.kss' not in fn:
+			fn += '.kss'
+
 		try:
 			with open(fn, "r") as f:
 				script = f.read()
