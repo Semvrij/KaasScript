@@ -63,8 +63,8 @@ class Lexer:
 				tokens.append(Token(TT_MUL, pos_start=self.pos))
 				self.advance()
 			elif self.current_char == '/':
-				tokens.append(Token(TT_DIV, pos_start=self.pos))
-				self.advance()
+				token = self.make_div_comments()
+				if token: tokens.append(token)
 			elif self.current_char == '%':
 				tokens.append(Token(TT_MODUL, pos_start=self.pos))
 				self.advance()
@@ -174,6 +174,25 @@ class Lexer:
 			tok_type = TT_ARROW
 
 		return Token(tok_type, pos_start=pos_start, pos_end=self.pos)
+
+	def make_div_comments(self):
+		pos_start = self.pos.copy()
+		self.advance()
+
+		if self.current_char == '/':
+			while self.current_char != '\n':
+				self.advance()
+			self.advance()
+		elif self.current_char == '*':
+			self.advance()
+			while True:
+				while self.current_char != '*':
+					self.advance()
+				self.advance()
+				if self.current_char == '/':
+					break
+			self.advance()
+		else: return Token(TT_DIV, pos_start=pos_start, pos_end=self.pos)
 
 	def make_not_equals(self):
 		pos_start = self.pos.copy()
