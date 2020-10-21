@@ -1,8 +1,8 @@
 from src.constants.constants import CURRENT_LANG, WHILELOOPLIMIT
 from src.constants.errormessages import DivisionByZeroMessage
 from src.errors import RTError
-from src.constants.tokentypes import TT_KEYWORD, TT_PLUS, TT_MINUS, TT_MUL, TT_DIV, TT_MODUL, TT_POW, TT_ROOT, TT_EE, TT_EEE, TT_NE, TT_LT, TT_GT, TT_LTE, TT_GTE
 from src.lexer import Lexer
+from src.constants.tokentypes import TT_KEYWORD, TT_PLUS, TT_MINUS, TT_MUL, TT_DIV, TT_MODUL, TT_POW, TT_ROOT, TT_EE, TT_EEE, TT_NE, TT_LT, TT_GT, TT_LTE, TT_GTE
 from src._parser import Parser
 
 class RTResult:
@@ -437,6 +437,22 @@ class Interpreter:
 
 		return res.success(
 			List(elements).set_context(context).set_pos(node.pos_start, node.pos_end)
+		)
+
+	def visit_ListAccessNode(self, node, context):
+		res = RTResult()
+
+		try:
+			index_node = node.listnode.element_nodes[self.visit(node.tok, context).value.value]
+		except:
+			return res.failure(RTError(
+				node.listnode.pos_start, node.tok.pos_end,
+				'Element at this index could not be retrieved from list because index is out of bounds',
+				context
+			))
+
+		return res.success(
+			res.register(self.visit(index_node, context))
 		)
 
 	def visit_VarAccessNode(self, node, context):

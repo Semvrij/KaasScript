@@ -278,6 +278,30 @@ class Parser:
 			res.register_advancement()
 			self.advance()
 
+		if self.current_tok.type == TT_LSQUARE:
+			res.register_advancement()
+			self.advance()
+			index = res.register(self.expr())
+			if res.error: return res
+
+			if self.current_tok.type != TT_RSQUARE:
+				return res.failure(InvalidSyntaxError(
+					self.current_tok.pos_start, self.current_tok.pos_end,
+					f"Expected ']'"
+				))
+			
+			res.register_advancement()
+			self.advance()
+
+			return res.success(ListAccessNode(
+				index,
+				ListNode(
+					element_nodes,
+					pos_start,
+					self.current_tok.pos_end.copy()
+				)
+			))
+
 		return res.success(ListNode(
 			element_nodes,
 			pos_start,
