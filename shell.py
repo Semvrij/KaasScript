@@ -13,4 +13,4 @@ while True:
 	result, error = run('<stdin>', text)
 
 	if error: print(error)
-	elif result: print(result)
+	elif result: print(repr(result))
