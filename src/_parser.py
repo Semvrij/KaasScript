@@ -395,13 +395,13 @@ class Parser:
 				if res.error: return res
 				else_case = (statements, True)
 
-				if self.current_tok.matches(TT_KEYWORD, 'end'):
+				if self.current_tok.type == TT_RCURLY:
 					res.register_advancement()
 					self.advance()
 				else:
 					return res.failure(InvalidSyntaxError(
 						self.current_tok.pos_start, self.current_tok.pos_end,
-						"Expected 'END'"
+						"Expected '}'"
 					))
 			else:
 				expr = res.register(self.statement())
@@ -441,10 +441,10 @@ class Parser:
 		condition = res.register(self.expr())
 		if res.error: return res
 
-		if not self.current_tok.matches(TT_KEYWORD, 'then'):
+		if not self.current_tok.type == TT_LCURLY:
 			return res.failure(InvalidSyntaxError(
 				self.current_tok.pos_start, self.current_tok.pos_end,
-				f"Expected 'THEN'"
+				"Expected '{'"
 			))
 
 		res.register_advancement()
@@ -458,7 +458,7 @@ class Parser:
 			if res.error: return res
 			cases.append((condition, statements, True))
 
-			if self.current_tok.matches(TT_KEYWORD, 'end'):
+			if self.current_tok.type == TT_RCURLY:
 				res.register_advancement()
 				self.advance()
 			else:
@@ -533,10 +533,10 @@ class Parser:
 		else:
 			step_value = None
 
-		if not self.current_tok.matches(TT_KEYWORD, 'then'):
+		if not self.current_tok.type == TT_LCURLY:
 			return res.failure(InvalidSyntaxError(
 				self.current_tok.pos_start, self.current_tok.pos_end,
-				f"Expected 'THEN'"
+				"Expected '{'"
 			))
 
 		res.register_advancement()
@@ -549,10 +549,10 @@ class Parser:
 			body = res.register(self.statements())
 			if res.error: return res
 
-			if not self.current_tok.matches(TT_KEYWORD, 'end'):
+			if not self.current_tok.type == TT_RCURLY:
 				return res.failure(InvalidSyntaxError(
 					self.current_tok.pos_start, self.current_tok.pos_end,
-					f"Expected 'END'"
+					"Expected '}'"
 				))
 
 			res.register_advancement()
@@ -580,10 +580,10 @@ class Parser:
 		condition = res.register(self.expr())
 		if res.error: return res
 
-		if not self.current_tok.matches(TT_KEYWORD, 'then'):
+		if not self.current_tok.type == TT_LCURLY:
 			return res.failure(InvalidSyntaxError(
 				self.current_tok.pos_start, self.current_tok.pos_end,
-				f"Expected 'THEN'"
+				"Expected '{'"
 			))
 
 		res.register_advancement()
@@ -596,10 +596,10 @@ class Parser:
 			body = res.register(self.statements())
 			if res.error: return res
 
-			if not self.current_tok.matches(TT_KEYWORD, 'end'):
+			if not self.current_tok.type == TT_RCURLY:
 				return res.failure(InvalidSyntaxError(
 					self.current_tok.pos_start, self.current_tok.pos_end,
-					f"Expected 'END'"
+					"Expected '}'"
 				))
 
 			res.register_advancement()
@@ -708,10 +708,10 @@ class Parser:
 		body = res.register(self.statements())
 		if res.error: return res
 
-		if not self.current_tok.matches(TT_KEYWORD, 'end'):
+		if not self.current_tok.type == TT_RCURLY:
 			return res.failure(InvalidSyntaxError(
 				self.current_tok.pos_start, self.current_tok.pos_end,
-				f"Expected 'END'"
+				"Expected '}'"
 		))
 
 		res.register_advancement()
