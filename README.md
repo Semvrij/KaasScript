@@ -10,7 +10,7 @@ A programming language made in Python.
 | -        | Subtraction                  | `10 - 5; // returns 5`  |
 | *        | Multiplication               | `5 * 10; // returns 50` |
 | /        | Division                     | `10 / 5; // returns 2`  |
-| %        | Modulus (Division Remainder) | `10 % 4; // returns 1`  |
+| %        | Modulus (Division Remainder) | `10 % 4; // returns 2`  |
 | ^        | Exponentiation               | `2 ^ 4; // returns 16`  |
 | √        | Root of                      | `3 √ 27; // returns 3`  |
 
