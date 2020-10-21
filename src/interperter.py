@@ -194,64 +194,64 @@ class Number(Value):
 
 	def get_comparison_eq(self, other):
 		if isinstance(other, String):
-			return Number(int(str(self.value) == other.value)).set_context(self.context), None
+			return Boolean(int(str(self.value) == other.value)).set_context(self.context), None
 		if isinstance(other, Number):
-			return Number(int(self.value == other.value)).set_context(self.context), None
+			return Boolean(int(self.value == other.value)).set_context(self.context), None
 		else:
 			return None, Value.illegal_operation(self, other)
 
 	def get_comparison_eee(self, other):
 		if isinstance(other, String):
-			return Number(0).set_context(self.context), None
+			return Boolean(0).set_context(self.context), None
 		elif isinstance(other, Number):
-			return Number(int(self.value == other.value)).set_context(self.context), None
+			return Boolean(int(self.value == other.value)).set_context(self.context), None
 		else:
 			return None, Value.illegal_operation(self, other)
 
 	def get_comparison_ne(self, other):
 		if isinstance(other, Number):
-			return Number(int(self.value != other.value)).set_context(self.context), None
+			return Boolean(int(self.value != other.value)).set_context(self.context), None
 		else:
 			return None, Value.illegal_operation(self, other)
 
 	def get_comparison_lt(self, other):
 		if isinstance(other, Number):
-			return Number(int(self.value < other.value)).set_context(self.context), None
+			return Boolean(int(self.value < other.value)).set_context(self.context), None
 		else:
 			return None, Value.illegal_operation(self, other)
 
 	def get_comparison_gt(self, other):
 		if isinstance(other, Number):
-			return Number(int(self.value > other.value)).set_context(self.context), None
+			return Boolean(int(self.value > other.value)).set_context(self.context), None
 		else:
 			return None, Value.illegal_operation(self, other)
 
 	def get_comparison_lte(self, other):
 		if isinstance(other, Number):
-			return Number(int(self.value <= other.value)).set_context(self.context), None
+			return Boolean(int(self.value <= other.value)).set_context(self.context), None
 		else:
 			return None, Value.illegal_operation(self, other)
 
 	def get_comparison_gte(self, other):
 		if isinstance(other, Number):
-			return Number(int(self.value >= other.value)).set_context(self.context), None
+			return Boolean(int(self.value >= other.value)).set_context(self.context), None
 		else:
 			return None, Value.illegal_operation(self, other)
 
 	def anded_by(self, other):
 		if isinstance(other, Number):
-			return Number(int(self.value and other.value)).set_context(self.context), None
+			return Boolean(int(self.value and other.value)).set_context(self.context), None
 		else:
 			return None, Value.illegal_operation(self, other)
 
 	def ored_by(self, other):
 		if isinstance(other, Number):
-			return Number(int(self.value or other.value)).set_context(self.context), None
+			return Boolean(int(self.value or other.value)).set_context(self.context), None
 		else:
 			return None, Value.illegal_operation(self, other)
 
 	def notted(self):
-		return Number(1 if self.value == 0 else 0).set_context(self.context), None
+		return Boolean(1 if self.value == 0 else 0).set_context(self.context), None
 
 	def copy(self):
 		copy = Number(self.value)
@@ -265,9 +265,32 @@ class Number(Value):
 	def __repr__(self):
 		return str(self.value)
 
-Number.null = Number(0)
-Number.false = Number(0)
-Number.true = Number(1)
+class Boolean(Number):
+	def __init__(self, value):
+		super().__init__(value)
+		self.value = value
+
+	def __repr__(self):
+		return 'true' if self.value else 'false'
+
+	def copy(self):
+		copy = Boolean(self.value)
+		copy.set_pos(self.pos_start, self.pos_end)
+		copy.set_context(self.context)
+		return copy
+
+class NullPointer(Number):
+	def __init__(self):
+		super().__init__(0)
+
+	def __repr__(self):
+		return 'null'
+
+	def copy(self):
+		copy = NullPointer()
+		copy.set_pos(self.pos_start, self.pos_end)
+		copy.set_context(self.context)
+		return copy
 
 class String(Value):
 	def __init__(self, value):
@@ -288,25 +311,42 @@ class String(Value):
 
 	def get_comparison_eq(self, other):
 		if isinstance(other, Number):
-			return Number(int(self.value == str(other.value))).set_context(self.context), None
+			return Boolean(int(self.value == str(other.value))).set_context(self.context), None
 		if isinstance(other, String):
-			return Number(int(self.value == other.value)).set_context(self.context), None
+			return Boolean(int(self.value == other.value)).set_context(self.context), None
 		else:
 			return None, Value.illegal_operation(self, other)
 	
 	def get_comparison_eee(self, other):
 		if isinstance(other, Number):
-			return Number(0).set_context(self.context), None
+			return Boolean(0).set_context(self.context), None
 		elif isinstance(other, String):
-			return Number(int(self.value == other.value)).set_context(self.context), None
+			return Boolean(int(self.value == other.value)).set_context(self.context), None
 		else:
 			return None, Value.illegal_operation(self, other)
 
 	def get_comparison_ne(self, other):
 		if isinstance(other, String):
-			return Number(int(self.value != other.value)).set_context(self.context), None
+			return Boolean(int(self.value != other.value)).set_context(self.context), None
 		else:
 			return None, Value.illegal_operation(self, other)
+
+	def ored_by(self, other):
+		if isinstance(other, String):
+			result = self.is_true() or other.is_true()
+			return Boolean(result).set_context(self.context), None
+		else:
+			return None, Value.illegal_operation(self, other)
+
+	def anded_by(self, other):
+		if isinstance(other, String):
+			result = self.is_true() and other.is_true()
+			return Boolean(result).set_context(self.context), None
+		else:
+			return None, Value.illegal_operation(self, other)
+
+	def notted(self):
+		return Boolean(not self.is_true()), None
 
 	def is_true(self):
 		return len(self.value) > 0
@@ -368,7 +408,39 @@ class List(Value):
 				)
 		else:
 			return None, Value.illegal_operation(self, other)
-	
+
+	def get_comparison_eq(self, other):
+		if isinstance(other, List):
+			return Boolean(int(str(self.elements) == str(other.elements))).set_context(self.context), None
+		else:
+			return Boolean(0), None
+
+	def get_comparison_ne(self, other):
+		if isinstance(other, List):
+			return Boolean(int(str(self.elements) != str(other.elements))).set_context(self.context), None
+		else:
+			return Boolean(1), None
+
+	def ored_by(self, other):
+		if isinstance(other, List):
+			result = self.is_true() or other.is_true()
+			return Boolean(result).set_context(self.context), None
+		else:
+			return None, Value.illegal_operation(self, other)
+
+	def anded_by(self, other):
+		if isinstance(other, List):
+			result = self.is_true() and other.is_true()
+			return Boolean(result).set_context(self.context), None
+		else:
+			return None, Value.illegal_operation(self, other)
+
+	def notted(self):
+		return Boolean(not self.is_true()), None
+
+	def is_true(self):
+		return len(self.elements) > 0
+
 	def copy(self):
 		copy = List(self.elements[:])
 		copy.set_pos(self.pos_start, self.pos_end)
@@ -442,7 +514,7 @@ class Function(BaseFunction):
 		value = res.register(interpreter.visit(self.body_node, exec_ctx))
 		if res.should_return() and res.func_return_value == None: return res
 		
-		ret_value = (value if self.should_auto_return else None) or res.func_return_value or Number.null
+		ret_value = (value if self.should_auto_return else None) or res.func_return_value or NullPointer()
 		return res.success(ret_value)
 
 	def copy(self):
@@ -486,7 +558,7 @@ class BuiltInFunction(BaseFunction):
 
 	def execute_print(self, exec_ctx):
 		print(str(exec_ctx.symbol_table.get('value')))
-		return RTResult().success(Number.null)
+		return RTResult().success(NullPointer())
 	execute_print.arg_names = ['value']
 
 	def execute_input(self, exec_ctx):
@@ -524,7 +596,7 @@ class BuiltInFunction(BaseFunction):
 		if error:
 			return RTResult().failure(error)
 
-		return RTResult().success(Number.null)
+		return RTResult().success(NullPointer())
 	execute_run.arg_names = ["fn"]
 
 class Context:
@@ -678,15 +750,15 @@ class Interpreter:
 			if condition_value.is_true():
 				expr_value = res.register(self.visit(expr, context))
 				if res.should_return(): return res
-				return res.success(Number.null if should_return_null else expr_value)
+				return res.success(NullPointer() if should_return_null else expr_value)
 
 		if node.else_case:
 			expr, should_return_null = node.else_case
 			else_value = res.register(self.visit(expr, context))
 			if res.should_return(): return res
-			return res.success(Number.null if should_return_null else else_value)
+			return res.success(NullPointer() if should_return_null else else_value)
 
-		return res.success(Number.null)
+		return res.success(NullPointer())
 	
 	def visit_ForNode(self, node, context):
 		res = RTResult()
@@ -724,7 +796,7 @@ class Interpreter:
 			elements.append(value)
 
 		return res.success(
-			Number.null if node.should_return_null else
+			NullPointer() if node.should_return_null else
 			List(elements).set_context(context).set_pos(node.pos_start, node.pos_end)
 		)
 
@@ -756,7 +828,7 @@ class Interpreter:
 			elements.append(value)
 
 		return res.success(
-			Number.null if node.should_return_null else
+			NullPointer() if node.should_return_null else
 			List(elements).set_context(context).set_pos(node.pos_start, node.pos_end)
 		)
 
@@ -797,7 +869,7 @@ class Interpreter:
 			value = res.register(self.visit(node.node_to_return, context))
 			if res.should_return(): return res
 		else:
-			value = Number.null
+			value = NullPointer()
 		
 		return res.success_return(value)
 
@@ -808,9 +880,9 @@ class Interpreter:
 		return RTResult().success_break()
 
 global_symbol_table = SymbolTable()
-global_symbol_table.set("null", Number.null)
-global_symbol_table.set("false", Number.false)
-global_symbol_table.set("true", Number.true)
+global_symbol_table.set("null", NullPointer())
+global_symbol_table.set("false", Boolean(0))
+global_symbol_table.set("true", Boolean(1))
 global_symbol_table.set("print", BuiltInFunction("print"))
 global_symbol_table.set("input", BuiltInFunction("input"))
 global_symbol_table.set("run", BuiltInFunction("run"))
