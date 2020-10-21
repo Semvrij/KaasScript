@@ -12,5 +12,8 @@ KEYWORDS = [
 	'step',
 	'while',
 	'function',
-	'end'
+	'end',
+	'return',
+	'continue',
+	'break'
 ]
