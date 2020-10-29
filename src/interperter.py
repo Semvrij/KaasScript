@@ -195,7 +195,7 @@ class Number(Value):
 	def get_comparison_eq(self, other):
 		if isinstance(other, String):
 			return Boolean(int(str(self.value) == other.value)).set_context(self.context), None
-		if isinstance(other, Number):
+		elif isinstance(other, Number):
 			return Boolean(int(self.value == other.value)).set_context(self.context), None
 		else:
 			return None, Value.illegal_operation(self, other)
@@ -312,7 +312,7 @@ class String(Value):
 	def get_comparison_eq(self, other):
 		if isinstance(other, Number):
 			return Boolean(int(self.value == str(other.value))).set_context(self.context), None
-		if isinstance(other, String):
+		elif isinstance(other, String):
 			return Boolean(int(self.value == other.value)).set_context(self.context), None
 		else:
 			return None, Value.illegal_operation(self, other)
@@ -620,6 +620,10 @@ class SymbolTable:
 	def set(self, name, value):
 		self.symbols[name] = value
 
+	def excist(self, name):
+		value = self.symbols.get(name, None)
+		return value != None
+
 	def remove(self, name):
 		del self.symbols[name]
 
@@ -658,6 +662,7 @@ class Interpreter:
 		res = RTResult()
 		var_name = node.var_name_tok.value
 		value = context.symbol_table.get(var_name)
+		if isinstance(value, dict): value = value['value']
 
 		if not value:
 			return res.failure(RTError(
@@ -675,7 +680,26 @@ class Interpreter:
 		value = res.register(self.visit(node.value_node, context))
 		if res.should_return(): return res
 
-		context.symbol_table.set(var_name, value)
+		if context.symbol_table.excist(var_name):
+			if node.constant:
+				return res.failure(RTError(
+					node.pos_start, node.pos_end,
+					f"constant variable '{var_name}' cannot be redefined",
+					context
+				))
+			if node.new_var:
+				return res.failure(RTError(
+					node.pos_start, node.pos_end,
+					f"'{var_name}' is already declared",
+					context
+				))
+
+		context.symbol_table.set(var_name, {
+			'value': value,
+			'constant': node.constant,
+			'new_var': node.new_var
+		})
+
 		return res.success(value)
 
 	def visit_BinOpNode(self, node, context):

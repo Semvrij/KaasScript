@@ -136,7 +136,11 @@ class Parser:
 	def expr(self):
 		res = ParseResult()
 
-		if self.current_tok.matches(TT_KEYWORD, 'var'):
+		if self.current_tok.matches(TT_KEYWORD, 'var') or self.current_tok.matches(TT_KEYWORD, 'const'):
+			constant = False
+			if self.current_tok.matches(TT_KEYWORD, 'const'):
+				constant = True
+
 			res.register_advancement()
 			self.advance()
 
@@ -160,7 +164,7 @@ class Parser:
 			self.advance()
 			expr = res.register(self.expr())
 			if res.error: return res
-			return res.success(VarAssignNode(var_name, expr))
+			return res.success(VarAssignNode(var_name, expr, constant, True))
 
 		node = res.register(self.bin_op(self.comp_expr, (TT_AND, TT_OR)))
 
@@ -273,8 +277,18 @@ class Parser:
 			return res.success(StringNode(tok))
 
 		elif tok.type == TT_IDENTIFIER:
+			var_name = self.current_tok
 			res.register_advancement()
 			self.advance()
+
+			if self.current_tok.type == TT_EQ:
+				res.register_advancement()
+				self.advance()
+				expr = res.register(self.expr())
+
+				if res.error: return res
+				return res.success(VarAssignNode(var_name, expr, False, False))
+
 			return res.success(VarAccessNode(tok))
 
 		elif tok.type == TT_LPAREN:
@@ -387,6 +401,15 @@ class Parser:
 			res.register_advancement()
 			self.advance()
 
+			if not self.current_tok.type == TT_LCURLY:
+				return res.failure(InvalidSyntaxError(
+					self.current_tok.pos_start, self.current_tok.pos_end,
+					"Expected '{'"
+				))
+
+			res.register_advancement()
+			self.advance()
+
 			if self.current_tok.type == TT_NEWLINE:
 				res.register_advancement()
 				self.advance()
@@ -413,6 +436,10 @@ class Parser:
 	def if_expr_b_or_c(self):
 		res = ParseResult()
 		cases, else_case = [], None
+
+		while self.current_tok.type == TT_NEWLINE:
+			res.register_advancement()
+			self.advance()
 
 		if self.current_tok.matches(TT_KEYWORD, 'elif'):
 			all_cases = res.register(self.if_expr_b())
@@ -441,16 +468,7 @@ class Parser:
 		condition = res.register(self.expr())
 		if res.error: return res
 
-		if not self.current_tok.type == TT_LCURLY:
-			return res.failure(InvalidSyntaxError(
-				self.current_tok.pos_start, self.current_tok.pos_end,
-				"Expected '{'"
-			))
-
-		res.register_advancement()
-		self.advance()
-
-		if self.current_tok.type == TT_NEWLINE:
+		if self.current_tok.type == TT_LCURLY:
 			res.register_advancement()
 			self.advance()
 
@@ -458,14 +476,19 @@ class Parser:
 			if res.error: return res
 			cases.append((condition, statements, True))
 
-			if self.current_tok.type == TT_RCURLY:
-				res.register_advancement()
-				self.advance()
-			else:
-				all_cases = res.register(self.if_expr_b_or_c())
-				if res.error: return res
-				new_cases, else_case = all_cases
-				cases.extend(new_cases)
+			if not self.current_tok.type == TT_RCURLY:
+				return res.failure(InvalidSyntaxError(
+					self.current_tok.pos_start, self.current_tok.pos_end,
+					"Expected '}'"
+				))
+
+			res.register_advancement()
+			self.advance()
+
+			all_cases = res.register(self.if_expr_b_or_c())
+			if res.error: return res
+			new_cases, else_case = all_cases
+			cases.extend(new_cases)
 		else:
 			expr = res.register(self.statement())
 			if res.error: return res
@@ -696,10 +719,10 @@ class Parser:
 				True
 			))
 
-		if self.current_tok.type != TT_NEWLINE:
+		if self.current_tok.type != TT_LCURLY:
 			return res.failure(InvalidSyntaxError(
 				self.current_tok.pos_start, self.current_tok.pos_end,
-				f"Expected '->' or NEWLINE"
+				"Expected '->' or {"
 		))
 
 		res.register_advancement()

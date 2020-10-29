@@ -1,5 +1,6 @@
 KEYWORDS = [
 	'var',
+	'const',
 	'if',
 	'else',
 	'elif',
