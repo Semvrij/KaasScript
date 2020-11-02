@@ -26,4 +26,10 @@ A programming language made in Python.
 | >=       | Greater than or equal to   | `5 >= 5; // returns true`       |
 | <=       | Less than or equal to      | `5 <= 10; // return true`       |
 
-...
+## Logical operators
+
+| Operator | Meaning | Example                         |
+|----------|---------|---------------------------------|
+| &&       | And     | `true && true // returns true`  |
+| \|\|     | Or      | `true || false // returns true` |
+| !        | Not     | `!false // returns true`        |
