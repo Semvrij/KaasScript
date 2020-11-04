@@ -20,7 +20,7 @@ A programming language made in Python.
 |----------|----------------------------|--------------------------------------------|
 | ==       | Equal to                   | <code>10 == '10'; // returns true</code>   |
 | ===      | Egual value and equal type | <code>10 === '10'; // returns false</code> |
-| !=       | Not equal                  | <code>5 > 10; // returns false</code>      |
+| !=       | Not equal                  | <code>5 != 10; // returns true</code>      |
 | >        | Greater than               | <code>5 > 10; // returns false</code>      |
 | <        | Less than                  | <code>5 < 10; // returns true</code>       |
 | >=       | Greater than or equal to   | <code>5 >= 5; // returns true</code>       |
