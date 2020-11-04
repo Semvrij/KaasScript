@@ -208,7 +208,7 @@ class Parser:
 		res = ParseResult()
 		tok = self.current_tok
 
-		if tok.type in (TT_PLUS, TT_MINUS):
+		if tok.type in (TT_PLUS, TT_MINUS, TT_ROOT):
 			res.register_advancement()
 			self.advance()
 			factor = res.register(self.factor())

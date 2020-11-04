@@ -741,7 +741,7 @@ class Interpreter:
 			result, error = left.anded_by(right)
 		elif node.op_tok.type == TT_OR:
 			result, error = left.ored_by(right)
-		
+
 		if error:
 			return res.failure(error)
 		else:
@@ -758,7 +758,9 @@ class Interpreter:
 			number, error = number.multed_by(Number(-1))
 		elif node.op_tok.type == TT_NOT:
 			number, error = number.notted()
-		
+		elif node.op_tok.type == TT_ROOT:
+			number, error = Number(2).root_of(number)
+
 		if error:
 			return res.failure(error)
 		else:
@@ -783,7 +785,7 @@ class Interpreter:
 			return res.success(NullPointer() if should_return_null else else_value)
 
 		return res.success(NullPointer())
-	
+
 	def visit_ForNode(self, node, context):
 		res = RTResult()
 		elements = []
