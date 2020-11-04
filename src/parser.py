@@ -72,6 +72,13 @@ class Parser:
 		while self.current_tok.type == TT_NEWLINE:
 			res.register_advancement()
 			self.advance()
+		
+		if self.current_tok.type == TT_EOF:
+			return res.success(ListNode(
+				(),
+				pos_start,
+				self.current_tok.pos_end.copy()
+			))
 
 		statement = res.register(self.statement())
 		if res.error: return res

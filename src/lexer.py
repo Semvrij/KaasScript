@@ -192,7 +192,7 @@ class Lexer:
 		self.advance()
 
 		if self.current_char == '/':
-			while self.current_char != '\n':
+			while self.current_char and self.current_char != '\n':
 				self.advance()
 			self.advance()
 		elif self.current_char == '*':
