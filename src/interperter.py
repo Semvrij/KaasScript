@@ -3,7 +3,7 @@ from src.constants.errormessages import DivisionByZeroMessage
 from src.errors import RTError
 from src.constants.tokentypes import TT_KEYWORD, TT_PLUS, TT_MINUS, TT_MUL, TT_DIV, TT_MODUL, TT_POW, TT_ROOT, TT_EE, TT_EEE, TT_NE, TT_LT, TT_GT, TT_LTE, TT_GTE, TT_AND, TT_OR, TT_NOT
 from src.lexer import Lexer
-from src._parser import Parser
+from src.parser import Parser
 
 class RTResult:
 	def __init__(self):
