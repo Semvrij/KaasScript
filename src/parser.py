@@ -215,7 +215,7 @@ class Parser:
 		res = ParseResult()
 		tok = self.current_tok
 
-		if tok.type in (TT_PLUS, TT_MINUS, TT_ROOT):
+		if tok.type in (TT_PLUS, TT_MINUS, TT_ROOT, TT_INCREMENT, TT_DECREMENT):
 			res.register_advancement()
 			self.advance()
 			factor = res.register(self.factor())
@@ -276,6 +276,13 @@ class Parser:
 		if tok.type in (TT_INT, TT_FLOAT):
 			res.register_advancement()
 			self.advance()
+			if self.current_tok.type in (TT_INCREMENT, TT_DECREMENT):
+				op_tok = self.current_tok
+				res.register_advancement()
+				self.advance()
+
+				return res.success(UnaryOpNode(op_tok, NumberNode(tok)))
+			
 			return res.success(NumberNode(tok))
 		
 		if tok.type == TT_STRING:

@@ -1,7 +1,7 @@
 from src.constants.constants import CURRENT_LANG, WHILELOOPLIMIT
 from src.constants.errormessages import DivisionByZeroMessage
 from src.errors import RTError
-from src.constants.tokentypes import TT_KEYWORD, TT_PLUS, TT_MINUS, TT_MUL, TT_DIV, TT_MODUL, TT_POW, TT_ROOT, TT_EE, TT_EEE, TT_NE, TT_LT, TT_GT, TT_LTE, TT_GTE, TT_AND, TT_OR, TT_NOT
+from src.constants.tokentypes import TT_KEYWORD, TT_PLUS, TT_MINUS, TT_MUL, TT_DIV, TT_MODUL, TT_POW, TT_ROOT, TT_INCREMENT, TT_DECREMENT, TT_EE, TT_EEE, TT_NE, TT_LT, TT_GT, TT_LTE, TT_GTE, TT_AND, TT_OR, TT_NOT
 from src.lexer import Lexer
 from src.parser import Parser
 
@@ -132,6 +132,7 @@ class Value:
 
 	def illegal_operation(self, other=None):
 		if not other: other = self
+		if not other.pos_end: other.pos_end = self.pos_start 
 		return RTError(
 			self.pos_start, other.pos_end,
 			'Illegal operation',
@@ -760,6 +761,10 @@ class Interpreter:
 			number, error = number.notted()
 		elif node.op_tok.type == TT_ROOT:
 			number, error = Number(2).root_of(number)
+		elif node.op_tok.type == TT_INCREMENT:
+			number, error = number.added_to(Number(1))
+		elif node.op_tok.type == TT_DECREMENT:
+			number, error = number.subbed_by(Number(1))
 
 		if error:
 			return res.failure(error)
