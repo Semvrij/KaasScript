@@ -15,7 +15,7 @@ arith-expr  : term ((PLUS|MINUS) term)*
 
 term        : factor ((MUL|DIV|MODUL) factor)*
 
-factor      : (PLUS|MINUS|ROOT) factor
+factor      : (PLUS|MINUS|ROOT|INCREMENT|DECREMENT) factor
             : power
 
 power       : root (POW factor)*
@@ -25,6 +25,7 @@ root        : call (ROOT) call
 call        : atom (LPAREN (expr (COMMA expr)*)? RPAREN)?
 
 atom        : INT|FLOAT|STRING|IDENTIFIER
+            : INT (INCREMENT|DECREMENT)
             : LPAREN expr RPAREN
             : list-expr
             : if-expr
