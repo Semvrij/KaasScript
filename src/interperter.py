@@ -678,7 +678,7 @@ class Interpreter:
 	def visit_VarAssignNode(self, node, context):
 		res = RTResult()
 		var_name = node.var_name_tok.value
-		value = res.register(self.visit(node.value_node, context))
+		value = return_value = res.register(self.visit(node.value_node, context))
 		if res.should_return(): return res
 
 		if context.symbol_table.excist(var_name):
@@ -694,6 +694,10 @@ class Interpreter:
 					f"'{var_name}' is already declared",
 					context
 				))
+		
+		if node.return_old:
+			return_value = context.symbol_table.get(var_name)
+			if isinstance(return_value, dict): return_value = return_value['value']
 
 		context.symbol_table.set(var_name, {
 			'value': value,
@@ -701,7 +705,7 @@ class Interpreter:
 			'new_var': node.new_var
 		})
 
-		return res.success(value)
+		return res.success(return_value)
 
 	def visit_BinOpNode(self, node, context):
 		res = RTResult()

@@ -213,14 +213,26 @@ class Parser:
 	
 	def factor(self):
 		res = ParseResult()
-		tok = self.current_tok
+		op_tok = self.current_tok
 
-		if tok.type in (TT_PLUS, TT_MINUS, TT_ROOT, TT_INCREMENT, TT_DECREMENT):
+		if op_tok.type in (TT_PLUS, TT_MINUS, TT_ROOT):
 			res.register_advancement()
 			self.advance()
 			factor = res.register(self.factor())
 			if res.error: return res
-			return res.success(UnaryOpNode(tok, factor))
+
+			return res.success(UnaryOpNode(op_tok, factor))
+		elif op_tok.type in (TT_INCREMENT, TT_DECREMENT):
+			res.register_advancement()
+			self.advance()
+			tok = self.current_tok
+			res.register_advancement()
+			self.advance()
+			if tok.type == TT_IDENTIFIER:
+				return res.success(VarAssignNode(tok, UnaryOpNode(op_tok, VarAccessNode(tok)), False, False))
+
+			return res.success(UnaryOpNode(op_tok, NumberNode(tok)))
+			
 
 		return self.power()
 
@@ -291,7 +303,6 @@ class Parser:
 			return res.success(StringNode(tok))
 
 		elif tok.type == TT_IDENTIFIER:
-			var_name = self.current_tok
 			res.register_advancement()
 			self.advance()
 
@@ -301,7 +312,13 @@ class Parser:
 				expr = res.register(self.expr())
 
 				if res.error: return res
-				return res.success(VarAssignNode(var_name, expr, False, False))
+				return res.success(VarAssignNode(tok, expr, False, False))
+			if self.current_tok.type in (TT_INCREMENT, TT_DECREMENT):
+				op_tok = self.current_tok
+				res.register_advancement()
+				self.advance()
+
+				return res.success(VarAssignNode(tok, UnaryOpNode(op_tok, VarAccessNode(tok)), False, False, True))
 
 			return res.success(VarAccessNode(tok))
 
