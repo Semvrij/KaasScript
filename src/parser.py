@@ -162,11 +162,11 @@ class Parser:
 			self.advance()
 
 			if self.current_tok.type != TT_EQ:
-				return res.failure(InvalidSyntaxError(
-					self.current_tok.pos_start, self.current_tok.pos_end,
-					"Expected '='"
-				))
-			
+				res.register_advancement()
+				self.advance()
+
+				return res.success(VarAssignNode(var_name, None, constant, True))
+
 			res.register_advancement()
 			self.advance()
 			expr = res.register(self.expr())

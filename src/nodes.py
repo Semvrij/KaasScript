@@ -41,7 +41,7 @@ class VarAssignNode:
 		self.return_old = return_old
 
 		self.pos_start = self.var_name_tok.pos_start
-		self.pos_end = self.value_node.pos_end
+		self.pos_end = self.value_node.pos_end if value_node else var_name_tok.pos_end
 
 class BinOpNode:
 	def __init__(self, left_node, op_tok, right_node):

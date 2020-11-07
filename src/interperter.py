@@ -637,6 +637,9 @@ class Interpreter:
 	def no_visit_method(self, node, context):
 		raise Exception(f'No visit_{type(node).__name__} method defined')
 
+	def visit_NoneType(self, node, context):
+		return RTResult().success(NullPointer())
+
 	def visit_NumberNode(self, node, context):
 		return RTResult().success(
 			Number(node.tok.value).set_context(context).set_pos(node.pos_start, node.pos_end)
