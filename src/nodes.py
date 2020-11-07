@@ -66,6 +66,18 @@ class UnaryOpNode:
 	def __repr__(self):
 		return f'({self.op_tok}, {self.node})'
 
+class TernaryOpNode:
+	def __init__(self, condition, expr_one, expr_two):
+		self.condition = condition
+		self.expr_one = expr_one
+		self.expr_two = expr_two
+
+		self.pos_start = self.condition.pos_start
+		self.pos_end = condition.pos_end
+
+	def __repr__(self):
+		return f'({self.condition} ? {self.expr_one} : {self.expr_two})'
+
 class IfNode:
 	def __init__(self, cases, else_case):
 		self.cases = cases

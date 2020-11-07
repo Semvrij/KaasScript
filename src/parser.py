@@ -794,4 +794,31 @@ class Parser:
 			if res.error: return res
 			left = BinOpNode(left, op_tok, right)
 
+			while self.current_tok.type == TT_NEWLINE:
+				res.register_advancement()
+				self.advance()
+
+			if self.current_tok.type == TT_QUESTION:
+				res.register_advancement()
+				self.advance()
+
+				expr_one = res.register(self.expr())
+
+				while self.current_tok.type == TT_NEWLINE:
+					res.register_advancement()
+					self.advance()
+
+				if not self.current_tok.type == TT_COLON:
+					return res.failure(InvalidSyntaxError(
+						self.current_tok.pos_start, self.current_tok.pos_end,
+						"Expected ':'"
+					))
+				
+				res.register_advancement()
+				self.advance()
+				
+				expr_two = res.register(self.expr())
+
+				return res.success(TernaryOpNode(left, expr_one, expr_two))
+
 		return res.success(left)

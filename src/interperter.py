@@ -774,7 +774,22 @@ class Interpreter:
 			return res.failure(error)
 		else:
 			return res.success(number.set_pos(node.pos_start, node.pos_end))
-	
+
+	def visit_TernaryOpNode(self, node, context):
+		res = RTResult()
+
+		condition_value = res.register(self.visit(node.condition, context))
+		if res.should_return(): return res
+
+		if condition_value.is_true():
+			expr_value = res.register(self.visit(node.expr_one, context))
+			if res.should_return(): return res
+			return res.success(expr_value)
+		else:
+			expr_value = res.register(self.visit(node.expr_two, context))
+			if res.should_return(): return res
+			return res.success(expr_value)
+
 	def visit_IfNode(self, node, context):
 		res = RTResult()
 
