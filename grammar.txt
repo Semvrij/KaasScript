@@ -9,7 +9,7 @@ expr        : (KEYWORD:VAR|KEYWORD:CONST) IDENTIFIER EQ expr
             : comp-expr ((AND|OR) comp-expr)*
 
 comp-expr   : NOT comp-expr
-            : arith-expr ((EE|LT|GT|LTE|GTE) arith-expr)*
+            : arith-expr ((EE|LT|GT|LTE|GTE) arith-expr)* (QUESTION expr COLON expr)?
 
 arith-expr  : term ((PLUS|MINUS) term)*
 
