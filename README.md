@@ -16,12 +16,12 @@ A programming language made in Python.
 
 ## Increment / Decrement Operators
 
-| Operator | Meaning                                                | Example                            |
-| -------- | ------------------------------------------------------ | ---------------------------------- |
-| ++x      | Pre-increment (Increments x by one, then returns x)    | <code>++x; // returns x + 1</code> |
-| x++      | Post-increment (Returns $x, then increments $x by one) | <code>x++; // returns x</code>     |
-| --x      | Pre-decrement (Decrements $x by one, then returns $x)  | <code>--x; // returns x - 1</code> |
-| x--      | Post-decrement (Returns $x, then decrements $x by one) | <code>x--; // returns x</code>     |
+| Operator | Meaning                                              | Example                            |
+| -------- | ---------------------------------------------------- | ---------------------------------- |
+| ++x      | Pre-increment (Increments x by one, then returns x)  | <code>++x; // returns x + 1</code> |
+| x++      | Post-increment (Returns x, then increments x by one) | <code>x++; // returns x</code>     |
+| --x      | Pre-decrement (Decrements x by one, then returns x)  | <code>--x; // returns x - 1</code> |
+| x--      | Post-decrement (Returns x, then decrements x by one) | <code>x--; // returns x</code>     |
 
 ## Comparison Operators
 
