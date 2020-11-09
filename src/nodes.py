@@ -73,7 +73,7 @@ class TernaryOpNode:
 		self.expr_two = expr_two
 
 		self.pos_start = self.condition.pos_start
-		self.pos_end = condition.pos_end
+		self.pos_end = expr_two.pos_end
 
 	def __repr__(self):
 		return f'({self.condition} ? {self.expr_one} : {self.expr_two})'
