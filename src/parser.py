@@ -432,7 +432,12 @@ class Parser:
 			res.register_advancement()
 			self.advance()
 
-			if not self.current_tok.type == TT_LCURLY:
+			if self.current_tok.matches(TT_KEYWORD, 'if'):
+				all_cases = res.register(self.if_expr_b())
+				if res.error: return res
+				cases, else_case = all_cases
+				return res.success((cases, else_case))
+			elif not self.current_tok.type == TT_LCURLY:
 				return res.failure(InvalidSyntaxError(
 					self.current_tok.pos_start, self.current_tok.pos_end,
 					"Expected '{'"
@@ -477,8 +482,12 @@ class Parser:
 			if res.error: return res
 			cases, else_case = all_cases
 		else:
-			else_case = res.register(self.if_expr_c())
+			all_cases = res.register(self.if_expr_c())
 			if res.error: return res
+			if all_cases == None or len(all_cases) == 1:
+				all_cases = else_case
+			else:
+				cases, else_case = all_cases		
 		
 		return res.success((cases, else_case))
 
@@ -486,12 +495,6 @@ class Parser:
 		res = ParseResult()
 		cases = []
 		else_case = None
-
-		if not self.current_tok.matches(TT_KEYWORD, case_keyword):
-			return res.failure(InvalidSyntaxError(
-				self.current_tok.pos_start, self.current_tok.pos_end,
-				f"Expected '{case_keyword}'"
-			))
 
 		res.register_advancement()
 		self.advance()
