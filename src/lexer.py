@@ -59,20 +59,16 @@ class Lexer:
 			elif self.current_char == '-':
 				tokens.append(self.make_minus_arrow_decrement())
 			elif self.current_char == '*':
-				tokens.append(Token(TT_MUL, pos_start=self.pos))
-				self.advance()
+				tokens.append(self.make_mul())
 			elif self.current_char == '/':
 				token = self.make_div_comments()
 				if token: tokens.append(token)
 			elif self.current_char == '%':
-				tokens.append(Token(TT_MODUL, pos_start=self.pos))
-				self.advance()
+				tokens.append(self.make_modul())
 			elif self.current_char == '^':
-				tokens.append(Token(TT_POW, pos_start=self.pos))
-				self.advance()
-			elif self.current_char == '√':
-				tokens.append(Token(TT_ROOT, pos_start=self.pos))
-				self.advance()
+				tokens.append(self.make_pow())
+			elif self.current_char == '~':
+				tokens.append(self.make_root())
 			elif self.current_char == '(':
 				tokens.append(Token(TT_LPAREN, pos_start=self.pos))
 				self.advance()
@@ -189,6 +185,9 @@ class Lexer:
 		if self.current_char == '+':
 			self.advance()
 			tok_type = TT_INCREMENT
+		elif self.current_char == '=':
+			self.advance()
+			tok_type = TT_PLUSEQ
 
 		return Token(tok_type, pos_start=pos_start, pos_end=self.pos)
 
@@ -203,10 +202,25 @@ class Lexer:
 		elif self.current_char == '-':
 			self.advance()
 			tok_type = TT_DECREMENT
+		elif self.current_char == '=':
+			self.advance()
+			tok_type = TT_MINUSEQ
+
+		return Token(tok_type, pos_start=pos_start, pos_end=self.pos)
+
+	def make_mul(self):
+		tok_type = TT_MUL
+		pos_start = self.pos.copy()
+		self.advance()
+
+		if self.current_char == '=':
+			self.advance()
+			tok_type = TT_MULEQ
 
 		return Token(tok_type, pos_start=pos_start, pos_end=self.pos)
 
 	def make_div_comments(self):
+		tok_type = TT_DIV
 		pos_start = self.pos.copy()
 		self.advance()
 
@@ -223,7 +237,44 @@ class Lexer:
 				if self.current_char == '/':
 					break
 			self.advance()
-		else: return Token(TT_DIV, pos_start=pos_start, pos_end=self.pos)
+		elif self.current_char == '=':
+			self.advance()
+			tok_type = TT_DIVEQ
+
+		return Token(tok_type, pos_start=pos_start, pos_end=self.pos)
+
+	def make_modul(self):
+		tok_type = TT_MUL
+		pos_start = self.pos.copy()
+		self.advance()
+
+		if self.current_char == '=':
+			self.advance()
+			tok_type = TT_MODULEQ
+
+		return Token(tok_type, pos_start=pos_start, pos_end=self.pos)
+
+	def make_pow(self):
+		tok_type = TT_POW
+		pos_start = self.pos.copy()
+		self.advance()
+
+		if self.current_char == '=':
+			self.advance()
+			tok_type = TT_POWEQ
+
+		return Token(tok_type, pos_start=pos_start, pos_end=self.pos)
+
+	def make_root(self):
+		tok_type = TT_ROOT
+		pos_start = self.pos.copy()
+		self.advance()
+
+		if self.current_char == '=':
+			self.advance()
+			tok_type = TT_ROOTEQ
+
+		return Token(tok_type, pos_start=pos_start, pos_end=self.pos)
 
 	def make_not_equals(self):
 		tok_type = TT_NOT

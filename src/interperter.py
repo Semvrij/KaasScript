@@ -1,7 +1,7 @@
 from src.constants.constants import CURRENT_LANG, WHILELOOPLIMIT
 from src.constants.errormessages import DivisionByZeroMessage
 from src.errors import RTError
-from src.constants.tokentypes import TT_KEYWORD, TT_PLUS, TT_MINUS, TT_MUL, TT_DIV, TT_MODUL, TT_POW, TT_ROOT, TT_INCREMENT, TT_DECREMENT, TT_EE, TT_EEE, TT_NE, TT_LT, TT_GT, TT_LTE, TT_GTE, TT_AND, TT_OR, TT_NOT
+from src.constants.tokentypes import TT_KEYWORD, TT_PLUS, TT_PLUSEQ, TT_MINUS, TT_MINUSEQ, TT_MUL, TT_MULEQ, TT_DIV, TT_DIVEQ, TT_MODUL, TT_MODULEQ, TT_POW, TT_POWEQ, TT_ROOT, TT_ROOTEQ, TT_INCREMENT, TT_DECREMENT, TT_EE, TT_EEE, TT_NE, TT_LT, TT_GT, TT_LTE, TT_GTE, TT_AND, TT_OR, TT_NOT
 from src.lexer import Lexer
 from src.parser import Parser
 
@@ -717,19 +717,19 @@ class Interpreter:
 		right = res.register(self.visit(node.right_node, context))
 		if res.should_return(): return res
 
-		if node.op_tok.type == TT_PLUS:
+		if node.op_tok.type in (TT_PLUS, TT_PLUSEQ):
 			result, error = left.added_to(right)
-		elif node.op_tok.type == TT_MINUS:
+		elif node.op_tok.type in (TT_MINUS, TT_MINUSEQ):
 			result, error = left.subbed_by(right)
-		elif node.op_tok.type == TT_MUL:
+		elif node.op_tok.type in (TT_MUL, TT_MULEQ):
 			result, error = left.multed_by(right)
-		elif node.op_tok.type == TT_DIV:
+		elif node.op_tok.type in (TT_DIV, TT_DIVEQ):
 			result, error = left.dived_by(right)
-		elif node.op_tok.type == TT_MODUL:
+		elif node.op_tok.type in (TT_MODUL, TT_MODULEQ):
 			result, error = left.modul_by(right)
-		elif node.op_tok.type == TT_POW:
+		elif node.op_tok.type in (TT_POW, TT_POWEQ):
 			result, error = left.powed_by(right)
-		elif node.op_tok.type == TT_ROOT:
+		elif node.op_tok.type in (TT_ROOT, TT_ROOTEQ):
 			result, error = left.root_of(right)
 		elif node.op_tok.type == TT_EE:
 			result, error = left.get_comparison_eq(right)
