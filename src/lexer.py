@@ -67,7 +67,7 @@ class Lexer:
 				tokens.append(self.make_modul())
 			elif self.current_char == '^':
 				tokens.append(self.make_pow())
-			elif self.current_char == '~':
+			elif self.current_char == '#':
 				tokens.append(self.make_root())
 			elif self.current_char == '(':
 				tokens.append(Token(TT_LPAREN, pos_start=self.pos))

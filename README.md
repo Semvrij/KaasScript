@@ -12,7 +12,7 @@ A programming language made in Python.
 | /        | Division                     | <code>10 / 5; // returns 2</code>   |
 | %        | Modulus (Division Remainder) | <code>10 % 4; // returns 2</code>   |
 | ^        | Exponentiation               | <code>2 ^ 4; // returns 16</code>   |
-| √        | Root of                      | <code>3 √ 27; // returns 3</code>   |
+| #        | Root of                      | <code>3 # 27; // returns 3</code>   |
 
 ## Increment / Decrement Operators
 
