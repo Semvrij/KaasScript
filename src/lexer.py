@@ -228,15 +228,17 @@ class Lexer:
 			while self.current_char and self.current_char != '\n':
 				self.advance()
 			self.advance()
+			return
 		elif self.current_char == '*':
 			self.advance()
-			while True:
-				while self.current_char != '*':
+			while self.current_char:
+				while self.current_char and self.current_char != '*':
 					self.advance()
 				self.advance()
 				if self.current_char == '/':
 					break
 			self.advance()
+			return
 		elif self.current_char == '=':
 			self.advance()
 			tok_type = TT_DIVEQ
