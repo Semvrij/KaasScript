@@ -625,6 +625,10 @@ class SymbolTable:
 		value = self.symbols.get(name, None)
 		return value != None
 
+	def is_constant(self, name):
+		value = self.symbols.get(name, None)
+		return value['constant']
+
 	def remove(self, name):
 		del self.symbols[name]
 
@@ -685,7 +689,7 @@ class Interpreter:
 		if res.should_return(): return res
 
 		if context.symbol_table.excist(var_name):
-			if node.constant:
+			if node.constant == None and context.symbol_table.is_constant(var_name):
 				return res.failure(RTError(
 					node.pos_start, node.pos_end,
 					f"constant variable '{var_name}' cannot be redefined",
@@ -939,6 +943,10 @@ global_symbol_table.set("true", Boolean(1))
 global_symbol_table.set("print", BuiltInFunction("print"))
 global_symbol_table.set("input", BuiltInFunction("input"))
 global_symbol_table.set("run", BuiltInFunction("run"))
+global_symbol_table.set("len", BuiltInFunction("len"))
+global_symbol_table.set("append", BuiltInFunction("append"))
+global_symbol_table.set("pop", BuiltInFunction("pop"))
+global_symbol_table.set("extend", BuiltInFunction("extend"))
 
 def run(fn, text):
 	# Generate tokens

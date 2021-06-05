@@ -312,20 +312,20 @@ class Parser:
 				expr = res.register(self.expr())
 
 				if res.error: return res
-				return res.success(VarAssignNode(tok, expr, False, False))
+				return res.success(VarAssignNode(tok, expr, None, False))
 			elif self.current_tok.type in (TT_INCREMENT, TT_DECREMENT):
 				op_tok = self.current_tok
 				res.register_advancement()
 				self.advance()
 
-				return res.success(VarAssignNode(tok, UnaryOpNode(op_tok, VarAccessNode(tok)), False, False, True))
+				return res.success(VarAssignNode(tok, UnaryOpNode(op_tok, VarAccessNode(tok)), None, False, True))
 			elif self.current_tok.type in (TT_PLUSEQ, TT_MINUSEQ, TT_MULEQ, TT_DIVEQ, TT_MODULEQ, TT_POWEQ, TT_ROOTEQ):
 				op_tok = self.current_tok
 				res.register_advancement()
 				self.advance()
 				right = res.register(self.expr())				
 
-				return res.success(VarAssignNode(tok, BinOpNode(VarAccessNode(tok), op_tok, right), False, False, True))
+				return res.success(VarAssignNode(tok, BinOpNode(VarAccessNode(tok), op_tok, right), None, False, True))
 
 			return res.success(VarAccessNode(tok))
 
