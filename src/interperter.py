@@ -130,6 +130,9 @@ class Value:
 	def is_true(self):
 		return False
 
+	def length(self):
+		return None, self.illegal_operation()
+
 	def illegal_operation(self, other=None):
 		if not other: other = self
 		if not other.pos_end: other.pos_end = self.pos_start 
@@ -352,6 +355,9 @@ class String(Value):
 	def is_true(self):
 		return len(self.value) > 0
 
+	def length(self):
+		return len(self.value), None
+
 	def copy(self):
 		copy = String(self.value)
 		copy.set_pos(self.pos_start, self.pos_end)
@@ -441,6 +447,9 @@ class List(Value):
 
 	def is_true(self):
 		return len(self.elements) > 0
+
+	def length(self):
+		return len(self.elements), None
 
 	def copy(self):
 		copy = List(self.elements[:])
@@ -599,6 +608,16 @@ class BuiltInFunction(BaseFunction):
 
 		return RTResult().success(NullPointer())
 	execute_run.arg_names = ["fn"]
+
+	def execute_len(self, exec_ctx):
+		value_ = exec_ctx.symbol_table.get("value")
+		result, error = value_.length()
+
+		if error:
+			return RTResult().failure(error)
+
+		return RTResult().success(Number(result))
+	execute_len.arg_names = ["value"]
 
 class Context:
 	def __init__(self, display_name, parent=None, parent_entry_pos=None):
@@ -944,9 +963,6 @@ global_symbol_table.set("print", BuiltInFunction("print"))
 global_symbol_table.set("input", BuiltInFunction("input"))
 global_symbol_table.set("run", BuiltInFunction("run"))
 global_symbol_table.set("len", BuiltInFunction("len"))
-global_symbol_table.set("append", BuiltInFunction("append"))
-global_symbol_table.set("pop", BuiltInFunction("pop"))
-global_symbol_table.set("extend", BuiltInFunction("extend"))
 
 def run(fn, text):
 	# Generate tokens
