@@ -1,17 +1,7 @@
 from json import load
 
-from src.constants.colors import fg_red, fg_yellow, reset
+from src.constants.colors import fg_red, reset
 
-
-def startupProcess():
-	print(fg_yellow, '''
-	 _  __                   ____               _         _
-	| |/ / __ _   __ _  ___ / ___|   ___  _ __ (_) _ __  | |_
-	| ' / / _` | / _` |/ __|\\___ \\  / __|| '__|| || '_ \\ | __|
-	| . \\| (_| || (_| |\\__ \\ ___) || (__ | |   | || |_) || |_
-	|_|\\_\\\\__,_| \\__,_||___/|____/  \\___||_|   |_|| .__/  \\__|
-	                                              |_|
-	''', reset)
 
 def printWarning(message):
 	print(fg_red,message,reset)
@@ -47,30 +37,3 @@ def listToString(li):
 	newList += f' and {li[-1]}'
 
 	return newList
-
-def errorString(text, pos_start, pos_end):
-	result = ''
-
-	# Calculate indices
-	idx_start = max(text.rfind('\n', 0, pos_start.idx), 0)
-	idx_end = text.find('\n', idx_start + 1)
-	if idx_end < 0: idx_end = len(text)
-
-	# Generate each line
-	line_count = pos_end.ln - pos_start.ln + 1
-	for i in range(line_count):
-		# Calculate line columns
-		line = text[idx_start:idx_end]
-		col_start = pos_start.col if i == 0 else 0
-		col_end = pos_end.col if i == line_count - 1 else len(line) - 1
-
-		# Append to result
-		result += line + '\n'
-		result += ' ' * col_start + '^' * (col_end - col_start)
-
-		# Re-calculate indices
-		idx_start = idx_end
-		idx_end = text.find('\n', idx_start + 1)
-		if idx_end < 0: idx_end = len(text)
-
-	return result.replace('\t', '')

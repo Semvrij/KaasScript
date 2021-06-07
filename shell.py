@@ -1,6 +1,13 @@
-from src.functions import startupProcess
+from src.constants.colors import fg_yellow, reset
 
-startupProcess()
+print(fg_yellow, '''
+_  __                   ____               _         _
+| |/ / __ _   __ _  ___ / ___|   ___  _ __ (_) _ __  | |_
+| ' / / _` | / _` |/ __|\\___ \\  / __|| '__|| || '_ \\ | __|
+| . \\| (_| || (_| |\\__ \\ ___) || (__ | |   | || |_) || |_
+|_|\\_\\\\__,_| \\__,_||___/|____/  \\___||_|   |_|| .__/  \\__|
+                                              |_|
+''', reset)
 
 from src.interperter import run
 
