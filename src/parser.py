@@ -1,8 +1,14 @@
+from src.constants.constants import CURRENT_LANG
+from src.constants.errormessages import (ExpectedNumberMessage,
+                                         ExpectedOperatorMessage,
+                                         ExpectedRightParanMessage,
+                                         IllegalCharErrorMessage,
+                                         InvalidSyntaxErrorMessage,
+                                         RTErrorMessage)
 from src.constants.tokentypes import *
 from src.errors import InvalidSyntaxError
-from src.constants.constants import CURRENT_LANG
-from src.constants.errormessages import IllegalCharErrorMessage, InvalidSyntaxErrorMessage, RTErrorMessage, ExpectedOperatorMessage, ExpectedRightParanMessage, ExpectedNumberMessage
 from src.nodes import *
+
 
 class ParseResult:
 	def __init__(self):
@@ -323,7 +329,7 @@ class Parser:
 				op_tok = self.current_tok
 				res.register_advancement()
 				self.advance()
-				right = res.register(self.expr())				
+				right = res.register(self.expr())
 
 				return res.success(VarAssignNode(tok, BinOpNode(VarAccessNode(tok), op_tok, right), None, False, True))
 
