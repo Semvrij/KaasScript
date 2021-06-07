@@ -63,6 +63,11 @@ class RTResult:
 			self.loop_should_break
 		)
 
+class Variable:
+	def __init__(self, value, is_constant = False):
+		self.value = value
+		self.is_constant = is_constant
+
 class Value:
 	def __init__(self):
 		self.set_pos()
@@ -653,7 +658,11 @@ class SymbolTable:
 
 	def is_constant(self, name):
 		value = self.symbols.get(name, None)
-		return value['constant']
+
+		if isinstance(value, Variable):
+			return value.is_constant
+		
+		return False
 
 	def remove(self, name):
 		del self.symbols[name]
@@ -696,7 +705,7 @@ class Interpreter:
 		res = RTResult()
 		var_name = node.var_name_tok.value
 		value = context.symbol_table.get(var_name)
-		if isinstance(value, dict): value = value['value']
+		if isinstance(value, Variable): value = value.value
 
 		if not value:
 			return res.failure(RTError(
@@ -730,13 +739,12 @@ class Interpreter:
 		
 		if node.return_old:
 			return_value = context.symbol_table.get(var_name)
-			if isinstance(return_value, dict): return_value = return_value['value']
+			if isinstance(return_value, Variable): return_value = return_value.value
 
-		context.symbol_table.set(var_name, {
-			'value': value,
-			'constant': node.constant,
-			'new_var': node.new_var
-		})
+		context.symbol_table.set(var_name, Variable(
+			value,
+			node.constant
+		))
 
 		return res.success(return_value)
 
