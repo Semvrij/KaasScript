@@ -247,7 +247,7 @@ class Lexer:
 		return Token(tok_type, pos_start=pos_start, pos_end=self.pos)
 
 	def make_modul(self):
-		tok_type = TT_MUL
+		tok_type = TT_MODUL
 		pos_start = self.pos.copy()
 		self.advance()
 
