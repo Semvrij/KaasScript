@@ -2,11 +2,11 @@ from src.constants.constants import CURRENT_LANG, WHILELOOPLIMIT
 from src.constants.errormessages import DivisionByZeroMessage
 from src.constants.tokentypes import (TT_AND, TT_DECREMENT, TT_DIV, TT_DIVEQ,
                                       TT_EE, TT_EEE, TT_GT, TT_GTE,
-                                      TT_INCREMENT, TT_KEYWORD, TT_LT, TT_LTE,
-                                      TT_MINUS, TT_MINUSEQ, TT_MODUL,
-                                      TT_MODULEQ, TT_MUL, TT_MULEQ, TT_NE,
-                                      TT_NOT, TT_OR, TT_PLUS, TT_PLUSEQ,
-                                      TT_POW, TT_POWEQ, TT_ROOT, TT_ROOTEQ)
+                                      TT_INCREMENT, TT_LT, TT_LTE, TT_MINUS,
+                                      TT_MINUSEQ, TT_MODUL, TT_MODULEQ, TT_MUL,
+                                      TT_MULEQ, TT_NE, TT_NOT, TT_OR, TT_PLUS,
+                                      TT_PLUSEQ, TT_POW, TT_POWEQ, TT_ROOT,
+                                      TT_ROOTEQ)
 from src.errors import RTError
 from src.lexer import Lexer
 from src.parser import Parser

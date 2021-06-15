@@ -1,4 +1,5 @@
 from src.constants.colors import fg_yellow, reset
+from src.interperter import run
 
 print(fg_yellow, '''
 _  __                   ____               _         _
@@ -8,8 +9,6 @@ _  __                   ____               _         _
 |_|\\_\\\\__,_| \\__,_||___/|____/  \\___||_|   |_|| .__/  \\__|
                                               |_|
 ''', reset)
-
-from src.interperter import run
 
 while True:
 	text = input('KaasScript > ')

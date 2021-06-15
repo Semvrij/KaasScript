@@ -1,10 +1,7 @@
 from src.constants.constants import CURRENT_LANG
 from src.constants.errormessages import (ExpectedNumberMessage,
                                          ExpectedOperatorMessage,
-                                         ExpectedRightParanMessage,
-                                         IllegalCharErrorMessage,
-                                         InvalidSyntaxErrorMessage,
-                                         RTErrorMessage)
+                                         ExpectedRightParanMessage)
 from src.constants.tokentypes import *
 from src.errors import InvalidSyntaxError
 from src.nodes import *
