@@ -180,27 +180,26 @@ class Parser:
 		if tok.type in (TT_INT, TT_FLOAT):
 			res.register_advancement()
 			self.advance()
-			return res.success(NumberNode(tok))
+			return_value = NumberNode(tok)
 		
-		if tok.type == TT_STRING:
+		elif tok.type == TT_STRING:
 			res.register_advancement()
 			self.advance()
-			return res.success(StringNode(tok))
+			return_value = StringNode(tok)
 
 		elif tok.type == TT_IDENTIFIER:
 			res.register_advancement()
 			self.advance()
-			return res.success(VarAccessNode(tok))
+			return_value = VarAccessNode(tok)
 
 		elif tok.type == TT_LPAREN:
 			res.register_advancement()
 			self.advance()
-			expr = res.register(self.expr())
+			return_value = res.register(self.expr())
 			if res.error: return res
 			if self.current_tok.type == TT_RPAREN:
 				res.register_advancement()
 				self.advance()
-				return res.success(expr)
 			else:
 				return res.failure(InvalidSyntaxError(
 					self.current_tok.pos_start, self.current_tok.pos_end,
@@ -208,29 +207,46 @@ class Parser:
 				))
 		
 		elif tok.type == TT_LSQUARE:
-			list_expr = res.register(self.list_expr())
+			return_value = res.register(self.list_expr())
 			if res.error: return res
-			return res.success(list_expr)
 
 		elif tok.matches(TT_KEYWORD, 'if'):
-			if_expr = res.register(self.if_expr())
+			return_value = res.register(self.if_expr())
 			if res.error: return res
-			return res.success(if_expr)
 		
 		elif tok.matches(TT_KEYWORD, 'for'):
-			for_expr = res.register(self.for_expr())
+			return_value = res.register(self.for_expr())
 			if res.error: return res
-			return res.success(for_expr)
 
 		elif tok.matches(TT_KEYWORD, 'while'):
-			while_expr = res.register(self.while_expr())
+			return_value = res.register(self.while_expr())
 			if res.error: return res
-			return res.success(while_expr)
 		
 		elif tok.matches(TT_KEYWORD, 'function'):
-			func_def = res.register(self.func_def())
+			return_value = res.register(self.func_def())
 			if res.error: return res
-			return res.success(func_def)
+		
+		if self.current_tok.type == TT_LSQUARE and return_value:
+			res.register_advancement()
+			self.advance()
+			index = res.register(self.expr())
+			if res.error: return res
+
+			if self.current_tok.type != TT_RSQUARE:
+				return res.failure(InvalidSyntaxError(
+					self.current_tok.pos_start, self.current_tok.pos_end,
+					f"Expected ']'"
+				))
+			
+			res.register_advancement()
+			self.advance()
+
+			return res.success(ListAccessNode(
+				index,
+				return_value
+			))
+
+		if return_value: return res.success(return_value)
 
 		return res.failure(InvalidSyntaxError(
 			tok.pos_start, tok.pos_end,
@@ -277,30 +293,6 @@ class Parser:
 
 			res.register_advancement()
 			self.advance()
-
-		if self.current_tok.type == TT_LSQUARE:
-			res.register_advancement()
-			self.advance()
-			index = res.register(self.expr())
-			if res.error: return res
-
-			if self.current_tok.type != TT_RSQUARE:
-				return res.failure(InvalidSyntaxError(
-					self.current_tok.pos_start, self.current_tok.pos_end,
-					f"Expected ']'"
-				))
-			
-			res.register_advancement()
-			self.advance()
-
-			return res.success(ListAccessNode(
-				index,
-				ListNode(
-					element_nodes,
-					pos_start,
-					self.current_tok.pos_end.copy()
-				)
-			))
 
 		return res.success(ListNode(
 			element_nodes,

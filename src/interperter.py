@@ -78,6 +78,9 @@ class Value:
 	def get_comparison_gte(self, other):
 		return None, self.illegal_operation(other)
 
+	def index_acces(self, other):
+		return None, self.illegal_operation(other)
+
 	def anded_by(self, other):
 		return None, self.illegal_operation(other)
 
@@ -269,6 +272,19 @@ class String(Value):
 			return Number(int(self.value != other.value)).set_context(self.context), None
 		else:
 			return None, Value.illegal_operation(self, other)
+	
+	def index_acces(self, other):
+		if isinstance(other, Number):
+			try:
+				return String(self.value[other.value]), None
+			except:
+				return None, RTError(
+					other.pos_start, other.pos_end,
+					'String index out of range',
+					self.context
+				)
+		else:
+			return None, Value.illegal_operation(self, other)
 
 	def is_true(self):
 		return len(self.value) > 0
@@ -315,7 +331,7 @@ class List(Value):
 		else:
 			return None, Value.illegal_operation(self, other)
 
-	def dived_by(self, other):
+	def index_acces(self, other):
 		if isinstance(other, Number):
 			try:
 				return self.elements[other.value], None
@@ -442,18 +458,15 @@ class Interpreter:
 	def visit_ListAccessNode(self, node, context):
 		res = RTResult()
 
-		try:
-			index_node = node.listnode.element_nodes[self.visit(node.tok, context).value.value]
-		except:
-			return res.failure(RTError(
-				node.listnode.pos_start, node.tok.pos_end,
-				'Element at this index could not be retrieved from list because index is out of bounds',
-				context
-			))
+		index_node = self.visit(node.tok, context).value
+		child_node = self.visit(node.child_node, context).value
+		
+		result, error = child_node.index_acces(index_node)
 
-		return res.success(
-			res.register(self.visit(index_node, context))
-		)
+		if error:
+			return res.failure(error)
+		else:
+			return res.success(result.set_pos(node.pos_start, node.pos_end))
 
 	def visit_VarAccessNode(self, node, context):
 		res = RTResult()

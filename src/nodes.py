@@ -26,9 +26,9 @@ class ListNode:
 		self.pos_end = pos_end
 
 class ListAccessNode:
-	def __init__(self, tok, listnode):
+	def __init__(self, tok, child_node):
 		self.tok = tok
-		self.listnode = listnode
+		self.child_node = child_node
 
 		self.pos_start = self.tok.pos_start
 		self.pos_end = self.tok.pos_end
