@@ -132,6 +132,9 @@ class Value:
 
 	def notted(self, other):
 		return None, self.illegal_operation(other)
+	
+	def index_acces(self, other):
+		return None, self.illegal_operation(other)
 
 	def execute(self, args):
 		return RTResult().failure(self.illegal_operation())
@@ -361,6 +364,19 @@ class String(Value):
 		else:
 			return None, Value.illegal_operation(self, other)
 
+	def index_acces(self, other):
+		if isinstance(other, Number):
+			try:
+				return String(self.value[other.value]), None
+			except:
+				return None, RTError(
+					other.pos_start, other.pos_end,
+					'String index out of range',
+					self.context
+				)
+		else:
+			return None, Value.illegal_operation(self, other)
+
 	def notted(self):
 		return Boolean(not self.is_true()), None
 
@@ -415,19 +431,6 @@ class List(Value):
 		else:
 			return None, Value.illegal_operation(self, other)
 
-	def dived_by(self, other):
-		if isinstance(other, Number):
-			try:
-				return self.elements[other.value], None
-			except:
-				return None, RTError(
-					other.pos_start, other.pos_end,
-					'Element at this index could not be retrieved from list because index is out of bounds',
-					self.context
-				)
-		else:
-			return None, Value.illegal_operation(self, other)
-
 	def get_comparison_eq(self, other):
 		if isinstance(other, List):
 			return Boolean(int(str(self.elements) == str(other.elements))).set_context(self.context), None
@@ -456,6 +459,19 @@ class List(Value):
 
 	def notted(self):
 		return Boolean(not self.is_true()), None
+
+	def index_acces(self, other):
+		if isinstance(other, Number):
+			try:
+				return self.elements[other.value], None
+			except:
+				return None, RTError(
+					other.pos_start, other.pos_end,
+					'Element at this index could not be retrieved from list because index is out of bounds',
+					self.context
+				)
+		else:
+			return None, Value.illegal_operation(self, other)
 
 	def is_true(self):
 		return len(self.elements) > 0
@@ -700,6 +716,19 @@ class Interpreter:
 		return res.success(
 			List(elements).set_context(context).set_pos(node.pos_start, node.pos_end)
 		)
+
+	def visit_IndexAccessNode(self, node, context):
+		res = RTResult()
+
+		index_node = self.visit(node.tok, context).value
+		child_node = self.visit(node.child_node, context).value
+
+		result, error = child_node.index_acces(index_node)
+
+		if error:
+			return res.failure(error)
+		else:
+			return res.success(result.set_pos(node.pos_start, node.pos_end))
 
 	def visit_VarAccessNode(self, node, context):
 		res = RTResult()
